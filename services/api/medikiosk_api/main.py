@@ -7,7 +7,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from medikiosk_api.routers import sessions
+from medikiosk_api.routers import consent, sessions
 
 app = FastAPI(title="MediKiosk API", version="0.1.0")
 
@@ -20,6 +20,7 @@ app.add_middleware(
 )
 
 app.include_router(sessions.router)
+app.include_router(consent.router)
 
 
 @app.get("/healthz")
