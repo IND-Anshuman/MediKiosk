@@ -60,8 +60,8 @@ const chestPainQuestions: DialogueQuestion[] = [
     type: "scale",
     voice_hi: "0 se 10 mein dard kitna hai?",
     voice_en: "Rate the pain from 0 to 10.",
-    touch_options_hi: [],
-    touch_options_en: [],
+    touch_options_hi: ["0-3", "4-6", "7-10"],
+    touch_options_en: ["0-3", "4-6", "7-10"],
   },
   {
     id: "other_problems",
@@ -108,10 +108,10 @@ export const handlers = [
       });
     }
     questionIdx += 1;
-    const isRedFlagStep = questionIdx === 5; // after 'associated' answered Sweating
+    const isRedFlagStep = questionIdx === 5; // after 'associated' answered (5th answer)
     return HttpResponse.json({
       red_flag: isRedFlagStep ? RED_FLAG : null,
-      next_question: chestPainQuestions[questionIdx] ?? null,
+      next_question: isRedFlagStep ? null : (chestPainQuestions[questionIdx] ?? null),
       confirm: null,
       re_asking: false,
     });
