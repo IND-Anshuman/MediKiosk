@@ -11,11 +11,13 @@ dependencies = [
     "sqlalchemy>=2.0.52",
     "medikiosk-shared",
     "medikiosk-ontology",
+    "medikiosk-api",
 ]
 
 [tool.uv.sources]
 medikiosk-shared = { workspace = true }
 medikiosk-ontology = { workspace = true }
+medikiosk-api = { workspace = true }
 
 [dependency-groups]
 dev = [
