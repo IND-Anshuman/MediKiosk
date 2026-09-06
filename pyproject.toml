@@ -17,6 +17,7 @@ dependencies = [
     "medikiosk-tts",
     "medikiosk-dialogue",
     "medikiosk-ocr",
+    "openai>=3.8.0",
 ]
 
 [tool.uv.sources]

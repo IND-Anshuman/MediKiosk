@@ -71,7 +71,7 @@ def test_prompt_hygiene_no_name_no_abha():
         context=_session_like_context(),
     )
     assert stub.calls, "stub client was never called"
-    sent = json.dumps(stub.calls[0])  # everything in the request payload
+    sent = json.dumps(stub.calls[0], ensure_ascii=False)  # whole request payload
     assert "Ravi Kumar" not in sent
     assert "14-3344-5566-7788" not in sent
     assert "sess-abc123" not in sent
