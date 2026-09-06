@@ -18,11 +18,11 @@ dependencies = [
     "medikiosk-dialogue",
     "medikiosk-ocr",
     "medikiosk-ner",
-        "medikiosk-docintel",
+    "medikiosk-docintel",
     "medikiosk-fhir",
     "medikiosk-summarizer",
-        "openai>=3.8.0",
-        ]
+    "openai>=3.8.0",
+]
 
 [tool.uv.sources]
 medikiosk-shared = { workspace = true }
