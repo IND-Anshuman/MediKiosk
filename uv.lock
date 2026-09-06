@@ -13,6 +13,7 @@ members = [
     "medikiosk-asr",
     "medikiosk-dialogue",
     "medikiosk-docintel",
+    "medikiosk-fhir",
     "medikiosk-ner",
     "medikiosk-ocr",
     "medikiosk-ontology",
@@ -1052,10 +1053,12 @@ dependencies = [
     { name = "medikiosk-asr" },
     { name = "medikiosk-dialogue" },
     { name = "medikiosk-docintel" },
+    { name = "medikiosk-fhir" },
     { name = "medikiosk-ner" },
     { name = "medikiosk-ocr" },
     { name = "medikiosk-ontology" },
     { name = "medikiosk-shared" },
+    { name = "medikiosk-summarizer" },
     { name = "medikiosk-tts" },
     { name = "openai" },
     { name = "python-multipart" },
@@ -1080,10 +1083,12 @@ requires-dist = [
     { name = "medikiosk-asr", editable = "services/asr" },
     { name = "medikiosk-dialogue", editable = "services/dialogue" },
     { name = "medikiosk-docintel", editable = "services/docintel" },
+    { name = "medikiosk-fhir", editable = "services/fhir" },
     { name = "medikiosk-ner", editable = "services/ner" },
     { name = "medikiosk-ocr", editable = "services/ocr" },
     { name = "medikiosk-ontology", editable = "packages/ontology" },
     { name = "medikiosk-shared", editable = "packages/shared" },
+    { name = "medikiosk-summarizer", editable = "services/summarizer" },
     { name = "medikiosk-tts", editable = "services/tts" },
     { name = "openai", specifier = ">=3.8.0" },
     { name = "python-multipart", specifier = ">=0.0.32" },
@@ -1182,6 +1187,27 @@ dependencies = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.111" },
     { name = "medikiosk-ner", editable = "services/ner" },
+    { name = "medikiosk-shared", editable = "packages/shared" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
+]
+
+[[package]]
+name = "medikiosk-fhir"
+version = "0.1.0"
+source = { editable = "services/fhir" }
+dependencies = [
+    { name = "fastapi" },
+    { name = "fhir-resources" },
+    { name = "httpx" },
+    { name = "medikiosk-shared" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.111" },
+    { name = "fhir-resources", specifier = ">=8.3.0" },
+    { name = "httpx", specifier = ">=0.27" },
     { name = "medikiosk-shared", editable = "packages/shared" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
 ]

@@ -19,6 +19,8 @@ dependencies = [
     "medikiosk-ocr",
     "medikiosk-ner",
         "medikiosk-docintel",
+    "medikiosk-fhir",
+    "medikiosk-summarizer",
         "openai>=3.8.0",
         ]
 
@@ -30,6 +32,7 @@ medikiosk-asr = { workspace = true }
 medikiosk-tts = { workspace = true }
 medikiosk-dialogue = { workspace = true }
 medikiosk-summarizer = { workspace = true }
+medikiosk-fhir = { workspace = true }
 medikiosk-ocr = { workspace = true }
 medikiosk-ner = { workspace = true }
 medikiosk-docintel = { workspace = true }
