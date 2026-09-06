@@ -29,7 +29,8 @@ dev = [
 # Frontend (apps/web) is pnpm-managed; see package.json.
 [tool.uv.workspace]
 members = [
-    "packages/*",
+    "packages/shared",
+    "packages/ontology",
     "services/*",
 ]
 
