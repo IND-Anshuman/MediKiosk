@@ -31,6 +31,7 @@ medikiosk-dialogue = { workspace = true }
 medikiosk-summarizer = { workspace = true }
 medikiosk-ocr = { workspace = true }
 medikiosk-ner = { workspace = true }
+medikiosk-docintel = { workspace = true }
 
 [dependency-groups]
 dev = [

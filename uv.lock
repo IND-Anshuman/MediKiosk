@@ -12,6 +12,7 @@ members = [
     "medikiosk-api",
     "medikiosk-asr",
     "medikiosk-dialogue",
+    "medikiosk-docintel",
     "medikiosk-ner",
     "medikiosk-ocr",
     "medikiosk-ontology",
@@ -1160,6 +1161,25 @@ dependencies = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.111" },
     { name = "medikiosk-ontology", editable = "packages/ontology" },
+    { name = "medikiosk-shared", editable = "packages/shared" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
+]
+
+[[package]]
+name = "medikiosk-docintel"
+version = "0.1.0"
+source = { editable = "services/docintel" }
+dependencies = [
+    { name = "fastapi" },
+    { name = "medikiosk-ner" },
+    { name = "medikiosk-shared" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.111" },
+    { name = "medikiosk-ner", editable = "services/ner" },
     { name = "medikiosk-shared", editable = "packages/shared" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
 ]

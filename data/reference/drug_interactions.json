@@ -1,0 +1,16 @@
+{
+  "interactions": [
+    {"pair": ["aspirin", "warfarin"], "severity": "major", "note": "Additive bleeding risk — concurrent use needs INR monitoring; avoid unless specifically directed."},
+    {"pair": ["aspirin", "ibuprofen"], "severity": "moderate", "note": "NSAID may reduce aspirin's antiplatelet effect and raises GI bleeding risk."},
+    {"pair": ["warfarin", "amoxicillin_clavulanate"], "severity": "moderate", "note": "Antibiotic may potentiate warfarin — monitor INR."},
+    {"pair": ["warfarin", "ciprofloxacin"], "severity": "major", "note": "Fluoroquinolone increases INR — significant bleeding risk."},
+    {"pair": ["clopidogrel", "omeprazole"], "severity": "moderate", "note": "Omeprazole inhibits clopidogrel activation — consider pantoprazole instead."},
+    {"pair": ["iron_folic_acid", "ciprofloxacin"], "severity": "moderate", "note": "Iron chelates fluoroquinolones — separate doses by 2 hours."},
+    {"pair": ["calcium", "thyroxine"], "severity": "moderate", "note": "Calcium binds levothyroxine — separate doses by 4 hours."},
+    {"pair": ["metformin", "glimepiride"], "severity": "moderate", "note": "Additive hypoglycemia risk — counsel patient on warning signs."},
+    {"pair": ["diclofenac", "aspirin"], "severity": "moderate", "note": "Dual NSAID exposure — GI bleeding and renal risk."},
+    {"pair": ["losartan", "hydrochlorothiazide"], "severity": "moderate", "note": "Additive hypotension/hydration effect — check BP and electrolytes."},
+    {"pair": ["tramadol", "domperidone"], "severity": "major", "note": "Additive QT prolongation risk."},
+    {"pair": ["telmisartan", "losartan"], "severity": "major", "note": "Duplicate ARB therapy — contraindicated duplication."}
+  ]
+}
