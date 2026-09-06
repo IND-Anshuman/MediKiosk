@@ -9,7 +9,13 @@ dependencies = [
     "fhir-resources>=8.3.0",
     "rq>=2.12.0",
     "sqlalchemy>=2.0.52",
+    "medikiosk-shared",
+    "medikiosk-ontology",
 ]
+
+[tool.uv.sources]
+medikiosk-shared = { workspace = true }
+medikiosk-ontology = { workspace = true }
 
 [dependency-groups]
 dev = [

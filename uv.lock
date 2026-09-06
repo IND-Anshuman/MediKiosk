@@ -6,6 +6,13 @@ resolution-markers = [
     "python_full_version < '3.12'",
 ]
 
+[manifest]
+members = [
+    "medikiosk",
+    "medikiosk-ontology",
+    "medikiosk-shared",
+]
+
 [[package]]
 name = "aiohappyeyeballs"
 version = "2.7.1"
@@ -657,6 +664,8 @@ dependencies = [
     { name = "edge-tts" },
     { name = "faster-whisper" },
     { name = "fhir-resources" },
+    { name = "medikiosk-ontology" },
+    { name = "medikiosk-shared" },
     { name = "rq" },
     { name = "sqlalchemy" },
 ]
@@ -674,6 +683,8 @@ requires-dist = [
     { name = "edge-tts", specifier = ">=7.2.8" },
     { name = "faster-whisper", specifier = ">=1.2.1" },
     { name = "fhir-resources", specifier = ">=8.3.0" },
+    { name = "medikiosk-ontology", editable = "packages/ontology" },
+    { name = "medikiosk-shared", editable = "packages/shared" },
     { name = "rq", specifier = ">=2.12.0" },
     { name = "sqlalchemy", specifier = ">=2.0.52" },
 ]
@@ -684,6 +695,36 @@ dev = [
     { name = "httpx", specifier = ">=0.27" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-asyncio", specifier = ">=0.23" },
+]
+
+[[package]]
+name = "medikiosk-ontology"
+version = "0.1.0"
+source = { editable = "packages/ontology" }
+dependencies = [
+    { name = "pydantic" },
+    { name = "pyyaml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pydantic", specifier = ">=2.7" },
+    { name = "pyyaml", specifier = ">=6.0" },
+]
+
+[[package]]
+name = "medikiosk-shared"
+version = "0.1.0"
+source = { editable = "packages/shared" }
+dependencies = [
+    { name = "fhir-resources" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fhir-resources", specifier = ">=7.1" },
+    { name = "pydantic", specifier = ">=2.7" },
 ]
 
 [[package]]
