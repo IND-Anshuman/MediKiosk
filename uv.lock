@@ -13,6 +13,7 @@ members = [
     "medikiosk-asr",
     "medikiosk-ontology",
     "medikiosk-shared",
+    "medikiosk-tts",
 ]
 
 [[package]]
@@ -738,6 +739,7 @@ dependencies = [
     { name = "medikiosk-asr" },
     { name = "medikiosk-ontology" },
     { name = "medikiosk-shared" },
+    { name = "medikiosk-tts" },
     { name = "python-multipart" },
     { name = "rq" },
     { name = "sqlalchemy" },
@@ -760,6 +762,7 @@ requires-dist = [
     { name = "medikiosk-asr", editable = "services/asr" },
     { name = "medikiosk-ontology", editable = "packages/ontology" },
     { name = "medikiosk-shared", editable = "packages/shared" },
+    { name = "medikiosk-tts", editable = "services/tts" },
     { name = "python-multipart", specifier = ">=0.0.32" },
     { name = "rq", specifier = ">=2.12.0" },
     { name = "sqlalchemy", specifier = ">=2.0.52" },
@@ -850,6 +853,23 @@ dependencies = [
 requires-dist = [
     { name = "fhir-resources", specifier = ">=7.1" },
     { name = "pydantic", specifier = ">=2.7" },
+]
+
+[[package]]
+name = "medikiosk-tts"
+version = "0.1.0"
+source = { editable = "services/tts" }
+dependencies = [
+    { name = "edge-tts" },
+    { name = "fastapi" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "edge-tts", specifier = ">=7.0" },
+    { name = "fastapi", specifier = ">=0.111" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
 ]
 
 [[package]]
