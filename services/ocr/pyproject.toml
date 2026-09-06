@@ -1,0 +1,22 @@
+[project]
+name = "medikiosk-ocr"
+version = "0.1.0"
+description = "Document OCR service (paddleocr; lazily imported — installed in Docker image only)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+    "python-multipart>=0.0.32",
+]
+
+# NOTE: paddleocr/pytesseract are deliberately NOT declared here — they are
+# Linux-only in this setup and are installed in the Docker image (later phase).
+# The engine is imported lazily inside _ocr_bytes so this service still
+# imports/starts on Windows for tests.
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["medikiosk_ocr"]

@@ -8,8 +8,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from medikiosk_api.routers import consent, sessions
+from medikiosk_api.timing import add_timing_middleware
 
 app = FastAPI(title="MediKiosk API", version="0.1.0")
+
+add_timing_middleware(app)
 
 app.add_middleware(
     CORSMiddleware,
