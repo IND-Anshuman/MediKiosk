@@ -1,0 +1,48 @@
+chief_complaints:
+  abdominal_pain:
+    name: abdominal_pain
+    framework: SOCRATES
+    questions:
+      - id: onset
+        type: duration
+        voice_hi: "Pet dard kab se hai?"
+        voice_en: "When did the pain start?"
+        touch_options_hi: ["1 ghante se kam", "Aaj", "Kal se", "2-3 din se", "1 hafte se zyada"]
+        touch_options_en: ["Less than 1 hour", "Today", "Yesterday", "2-3 days", "More than a week"]
+      - id: location
+        type: single_choice
+        voice_hi: "Dard pet ke kaunsi jagah hai?"
+        voice_en: "Where in the abdomen?"
+        touch_options_hi: ["Upar beech mein", "Daayein upar", "Baayein upar", "Neeche", "Sara pet"]
+        touch_options_en: ["Upper middle", "Right upper", "Left upper", "Lower", "All over"]
+      - id: character
+        type: single_choice
+        voice_hi: "Dard kaisa hai?"
+        voice_en: "How is the pain?"
+        touch_options_hi: ["Tez (cheerta hua)", "Dheere lagataar", "Aata-jaata (marod)", "Jalta hua"]
+        touch_options_en: ["Sharp/stabbing", "Dull constant", "Crampy comes & goes", "Burning"]
+      - id: associated
+        type: multi_choice
+        voice_hi: "Aur kya takleef hai?"
+        voice_en: "Other symptoms?"
+        touch_options_hi: ["Ulti", "Jiya jalna", "Bhookh nahi", "Bukhar", "Kabz", "Dast", "Kala dast (khoon)", "Pet sakht (pathar jaisa)", "Kuch nahi"]
+        touch_options_en: ["Vomiting", "Acidity", "No appetite", "Fever", "Constipation", "Diarrhea", "Black stools (blood)", "Rigid hard abdomen", "None"]
+      - id: severity
+        type: scale
+        voice_hi: "0 se 10 mein dard kitna hai?"
+        voice_en: "Rate the pain 0 to 10."
+      - id: other_problems
+        type: multi_choice
+        voice_hi: "Koi aur bimari ya takleef bhi hai?"
+        voice_en: "Any other problems or illnesses?"
+        touch_options_hi: ["Bukhar", "Khaansi", "Sar dard", "Seene mein dard", "Sugar/BP", "Kuch nahi"]
+        touch_options_en: ["Fever", "Cough", "Headache", "Chest pain", "Diabetes/BP", "None"]
+
+red_flags:
+  - pattern_id: abdomen_acute
+    chief_complaint: abdominal_pain
+    match_slots:
+      associated: ["Black stools (blood)", "Rigid hard abdomen"]
+    urgency: urgent
+    message_hi: "Pet ke lakshan gambhir ho sakte hain — turant staff se milein."
+    message_en: "These abdominal symptoms may be serious. Please alert staff now."

@@ -1,0 +1,44 @@
+chief_complaints:
+  cough:
+    name: cough
+    framework: SAMPLE
+    questions:
+      - id: onset
+        type: duration
+        voice_hi: "Khaansi kab se hai?"
+        voice_en: "Since when is the cough?"
+        touch_options_hi: ["Aaj", "2-3 din", "1 hafta", "1 mahine se zyada"]
+        touch_options_en: ["Today", "2-3 days", "1 week", "More than 1 month"]
+      - id: type
+        type: single_choice
+        voice_hi: "Khaansi kaisi hai?"
+        voice_en: "What kind of cough?"
+        touch_options_hi: ["Sukhi (baalgam nahi)", "Baalgam wali", "Khoon lag rahi hai", "Seeti jaisi awaaz (saans)"]
+        touch_options_en: ["Dry", "Productive (with phlegm)", "With blood", "Wheezy"]
+      - id: associated
+        type: multi_choice
+        voice_hi: "Aur kya takleef hai?"
+        voice_en: "Other symptoms?"
+        touch_options_hi: ["Bukhar", "Saans lene mein takleef", "Seene mein dard", "Gala kharash", "Jukaam", "Raat ko zyada", "Kuch nahi"]
+        touch_options_en: ["Fever", "Shortness of breath", "Chest pain", "Sore throat", "Runny nose", "Worse at night", "None"]
+      - id: triggers
+        type: multi_choice
+        voice_hi: "Kya khaansi badha deta hai?"
+        voice_en: "What makes the cough worse?"
+        touch_options_hi: ["Dhoowan/dhool", "Thanda mausam", "Khane ke baad", "Raat ko", "Pata nahi"]
+        touch_options_en: ["Smoke/dust", "Cold air", "After eating", "At night", "Don't know"]
+      - id: other_problems
+        type: multi_choice
+        voice_hi: "Koi aur bimari ya takleef bhi hai?"
+        voice_en: "Any other problems or illnesses?"
+        touch_options_hi: ["Bukhar", "Sar dard", "Pet dard", "Seene mein dard", "Sugar/BP", "Kuch nahi"]
+        touch_options_en: ["Fever", "Headache", "Abdominal pain", "Chest pain", "Diabetes/BP", "None"]
+
+red_flags:
+  - pattern_id: hemoptysis
+    chief_complaint: cough
+    match_slots:
+      type: ["With blood", "Khoon"]
+    urgency: urgent
+    message_hi: "Khoon wali khaansi ke liye turant staff se milein."
+    message_en: "Coughing blood needs urgent review. Please alert staff now."

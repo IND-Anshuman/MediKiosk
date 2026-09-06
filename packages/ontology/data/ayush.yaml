@@ -1,0 +1,77 @@
+chief_complaints:
+  ayurvedic_assessment:
+    name: ayurvedic_assessment
+    framework: DASHAVIDHA
+    questions:
+      - id: prakriti
+        type: single_choice
+        voice_hi: "Aapka shareer kaunsa pratikul rakhne wala prakar hai? Vata, Pitta, ya Kapha?"
+        voice_en: "Which constitution (Prakriti) feels most like you? Vata, Pitta, or Kapha?"
+        touch_options_hi: ["Vata (sukha, halka, chanchal)", "Pitta (garam, tez)", "Kapha (bhaari, thanda)"]
+        touch_options_en: ["Vata (dry, light)", "Pitta (hot, sharp)", "Kapha (heavy, cool)"]
+      - id: vikriti
+        type: single_choice
+        voice_hi: "Abhi kya takleef hai — kaisa lag raha hai?"
+        voice_en: "What is your current imbalance (Vikriti)?"
+        touch_options_hi: ["Vata badha (sukhai, dard, bechaini)", "Pitta badha (garmi, jalna, gussa)", "Kapha badha (bhaaripan, thand, sustee)", "Pata nahi"]
+        touch_options_en: ["Vata increased (dryness, pain, restlessness)", "Pitta increased (heat, burning)", "Kapha increased (heaviness, sluggishness)", "Not sure"]
+      - id: sara
+        type: single_choice
+        voice_hi: "Aapke shareer ka bhaari gunvatta (sara) kaisi hai?"
+        voice_en: "Body tissue quality (Sara)?"
+        touch_options_hi: ["Uttam (behtar)", "Madhyam", "Heen (kamzor)"]
+        touch_options_en: ["Superior (uttam)", "Medium (madhyam)", "Inferior (heen)"]
+      - id: samhanana
+        type: single_choice
+        voice_hi: "Aapka shareer ka nirman (samhanana) kaisa hai?"
+        voice_en: "Body build (Samhanana)?"
+        touch_options_hi: ["Sam (majboot)", "Madhyam", "Heen (komal)"]
+        touch_options_en: ["Well-built (sam)", "Medium (madhyam)", "Poor (heen)"]
+      - id: pramana
+        type: scale
+        voice_hi: "Aapke shareer ke maap (pramana) ke hisaab se khud ko kaise samajhte hain, 0 se 10 mein?"
+        voice_en: "Body measurements (Pramana) — how do you rate yourself, 0 to 10?"
+        touch_options_hi: ["0-3", "4-6", "7-10"]
+        touch_options_en: ["0-3", "4-6", "7-10"]
+      - id: satmya
+        type: multi_choice
+        voice_hi: "Aapke shareer ki aadat (satmya) kya hai — kaunsa bhojan theek lagta hai?"
+        voice_en: "What are you accustomed to (Satmya)?"
+        touch_options_hi: ["Garam bhojan", "Thanda bhojan", "Tikha bhojan", "Meetha bhojan"]
+        touch_options_en: ["Hot foods", "Cold foods", "Spicy foods", "Sweet foods"]
+      - id: sattva
+        type: single_choice
+        voice_hi: "Aapke mann ki shakti (sattva) kaisi hai?"
+        voice_en: "Mental resilience (Sattva)?"
+        touch_options_hi: ["Uttam (majboot)", "Madhyam", "Heen (kamzor)"]
+        touch_options_en: ["Superior (uttam)", "Medium (madhyam)", "Inferior (heen)"]
+      - id: ahara_shakti
+        type: single_choice
+        voice_hi: "Bhookh aur pachan shakti (ahara shakti) kaisi hai?"
+        voice_en: "Digestive capacity (Ahara Shakti)?"
+        touch_options_hi: ["Uttam", "Madhyam", "Heen (Manda)"]
+        touch_options_en: ["Superior (uttam)", "Medium (madhyam)", "Inferior (manda)"]
+      - id: vyayama_shakti
+        type: single_choice
+        voice_hi: "Vyayam (shram) karne ki shamta kaisi hai?"
+        voice_en: "Exercise capacity (Vyayama Shakti)?"
+        touch_options_hi: ["Uttam", "Madhyam", "Heen"]
+        touch_options_en: ["Superior (uttam)", "Medium (madhyam)", "Inferior (heen)"]
+      - id: vaya
+        type: scale
+        voice_hi: "Aapki umar kitni hai?"
+        voice_en: "Your age?"
+        touch_options_hi: ["18-30", "31-45", "46-60", "60+"]
+        touch_options_en: ["18-30", "31-45", "46-60", "60+"]
+      - id: agni
+        type: single_choice
+        voice_hi: "Aapki agni (pachan ki aag) kaisi hai?"
+        voice_en: "Digestive fire (Agni)?"
+        touch_options_hi: ["Teekshna (tez — jaldi bhookh, jaldi pachan)", "Sam (santulit)", "Manda (dheere/badha hua pachan)"]
+        touch_options_en: ["Teekshna (sharp)", "Sam (balanced)", "Manda (slow)"]
+      - id: koshtha
+        type: single_choice
+        voice_hi: "Aapka koshtha (mal-mutra prakriya) kaisa hai?"
+        voice_en: "Bowel nature (Koshtha)?"
+        touch_options_hi: ["Krura (kabz-prone)", "Sama (santulit)", "Mrudu (dast-prone)"]
+        touch_options_en: ["Krura (constipated)", "Sama (regular)", "Mrudu (loose)"]

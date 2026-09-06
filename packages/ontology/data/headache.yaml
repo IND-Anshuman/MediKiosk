@@ -1,0 +1,49 @@
+chief_complaints:
+  headache:
+    name: headache
+    framework: SOCRATES
+    questions:
+      - id: onset
+        type: single_choice
+        voice_hi: "Sar dard kaise shuru hua?"
+        voice_en: "How did the headache start?"
+        touch_options_hi: ["Achanak sabse tez (thunderclap)", "Dheere-dheere badha", "Aata-jaata rehta hai", "Kai din se hai"]
+        touch_options_en: ["Achanak sabse tez (thunderclap)", "Gradual", "Comes and goes", "Many days"]
+      - id: location
+        type: single_choice
+        voice_hi: "Dard kahan hai?"
+        voice_en: "Where is the pain?"
+        touch_options_hi: ["Aadha sar (ek taraf)", "Poora sar", "Aankhon ke peechhe", "Mathe pe", "Gale ke paas"]
+        touch_options_en: ["One side", "All over", "Behind eyes", "Forehead", "Back of head"]
+      - id: character
+        type: single_choice
+        voice_hi: "Dard kaisa lagta hai?"
+        voice_en: "How does it feel?"
+        touch_options_hi: ["Dhadkan jaisa (thap-thap)", "Dabbaav jaisa", "Tez (cheerta)", "Patti jaisi kasi"]
+        touch_options_en: ["Throbbing", "Pressure", "Sharp/stabbing", "Tight band"]
+      - id: associated
+        type: multi_choice
+        voice_hi: "Aur kya takleef hai?"
+        voice_en: "Other symptoms?"
+        touch_options_hi: ["Ulti jaisa", "Roshni mein takleef (aankhen)", "Chakkar", "Aawaz mein takleef", "Kamzori ek taraf (ang) ", "Bujhepan/confusion", "Kuch nahi"]
+        touch_options_en: ["Nausea", "Light sensitivity", "Dizziness", "Sound sensitivity", "Weakness one side", "Confusion", "None"]
+      - id: severity
+        type: scale
+        voice_hi: "0 se 10 mein dard kitna hai?"
+        voice_en: "Rate the pain 0 to 10."
+      - id: other_problems
+        type: multi_choice
+        voice_hi: "Koi aur bimari ya takleef bhi hai?"
+        voice_en: "Any other problems or illnesses?"
+        touch_options_hi: ["Bukhar", "Khaansi", "Pet dard", "Seene mein dard", "Sugar/BP", "Kuch nahi"]
+        touch_options_en: ["Fever", "Cough", "Abdominal pain", "Chest pain", "Diabetes/BP", "None"]
+
+red_flags:
+  - pattern_id: headache_neuro
+    chief_complaint: headache
+    match_slots:
+      onset: ["Achanak sabse tez (thunderclap)"]
+      associated: ["Dizziness", "Weakness one side", "Confusion", "Light sensitivity"]
+    urgency: immediate
+    message_hi: "Aapke sar dard ke lakshan gambhir ho sakte hain — turant staff se milein."
+    message_en: "Your headache pattern may be serious. Please alert staff immediately."

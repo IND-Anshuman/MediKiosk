@@ -1,0 +1,55 @@
+chief_complaints:
+  chest_pain:
+    name: chest_pain
+    framework: SOCRATES
+    questions:
+      - id: onset
+        type: duration
+        voice_hi: "Aapko kab se ye dard hai?"
+        voice_en: "When did the pain start?"
+        touch_options_hi: ["1 ghante se kam", "Aaj", "Kal se", "2-3 din se", "1 hafte se zyada"]
+        touch_options_en: ["Less than 1 hour", "Today", "Yesterday", "2-3 days", "More than a week"]
+      - id: location
+        type: single_choice
+        voice_hi: "Dard kahan hai?"
+        voice_en: "Where is the pain?"
+        touch_options_hi: ["Seene ke beech mein", "Baayein taraf", "Daayein taraf", "Poore seene mein"]
+        touch_options_en: ["Center of chest", "Left side", "Right side", "All over chest"]
+      - id: character
+        type: single_choice
+        voice_hi: "Dard kaisa hai?"
+        voice_en: "How would you describe the pain?"
+        touch_options_hi: ["Dabbaav jaisa (pressure)", "Chhuru jaisa (tez)", "Jalta hua", "Dheere dard"]
+        touch_options_en: ["Crushing/pressure", "Sharp/stabbing", "Burning", "Dull ache"]
+      - id: radiation
+        type: single_choice
+        voice_hi: "Kya dard kisi aur jagah phelta hai?"
+        voice_en: "Does the pain spread anywhere?"
+        touch_options_hi: ["Baayein haath mein", "Jabde mein", "Peeth mein", "Ek hi jagah rehta hai", "Pata nahi"]
+        touch_options_en: ["Left arm", "Jaw", "Back", "Stays in one place", "Not sure"]
+      - id: associated
+        type: multi_choice
+        voice_hi: "Kya aur bhi takleef hai?"
+        voice_en: "Any other symptoms along with it?"
+        touch_options_hi: ["Pasina aa raha hai", "Saans lene mein takleef", "Ulti jaisa", "Chakkar", "Kuch nahi"]
+        touch_options_en: ["Sweating", "Shortness of breath", "Nausea", "Dizziness", "None"]
+      - id: severity
+        type: scale
+        voice_hi: "0 se 10 mein dard kitna hai?"
+        voice_en: "Rate the pain from 0 to 10."
+      - id: other_problems
+        type: multi_choice
+        voice_hi: "Koi aur bimari ya takleef bhi hai?"
+        voice_en: "Any other problems or illnesses?"
+        touch_options_hi: ["Bukhar", "Khaansi", "Sar dard", "Pet dard", "Sugar/BP", "Kuch nahi"]
+        touch_options_en: ["Fever", "Cough", "Headache", "Abdominal pain", "Diabetes/BP", "None"]
+
+red_flags:
+  - pattern_id: mi_suspect
+    chief_complaint: chest_pain
+    match_slots:
+      radiation: ["Left arm", "Jaw"]
+      associated: ["Sweating", "Shortness of breath"]
+    urgency: immediate
+    message_hi: "Aapke lakshan gambhir ho sakte hain. Turant nurse ko bulayein?"
+    message_en: "Your symptoms may be serious. Call a nurse now?"

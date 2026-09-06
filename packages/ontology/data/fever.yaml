@@ -1,0 +1,44 @@
+chief_complaints:
+  fever:
+    name: fever
+    framework: OPQRST
+    questions:
+      - id: onset
+        type: duration
+        voice_hi: "Bukhar kab se hai?"
+        voice_en: "Since when do you have fever?"
+        touch_options_hi: ["Aaj", "Kal se", "2-3 din se", "1 hafte se zyada"]
+        touch_options_en: ["Today", "Yesterday", "2-3 days", "More than a week"]
+      - id: peak_temp
+        type: single_choice
+        voice_hi: "Kitna tapamaan tha sabse zyada?"
+        voice_en: "What was the highest temperature?"
+        touch_options_hi: ["99-100 F", "100-102 F", "102-104 F", "Pata nahi"]
+        touch_options_en: ["99-100 F", "100-102 F", "102-104 F", "Don't know"]
+      - id: pattern
+        type: single_choice
+        voice_hi: "Bukhar kaise rehta hai?"
+        voice_en: "How does the fever behave?"
+        touch_options_hi: ["Lagataar", "Aata-jaata rehta hai", "Raat ko zyada", "Subah zyada"]
+        touch_options_en: ["Continuous", "Comes and goes", "Worse at night", "Worse in morning"]
+      - id: associated
+        type: multi_choice
+        voice_hi: "Aur kya takleef hai?"
+        voice_en: "Any other symptoms?"
+        touch_options_hi: ["Khaansi", "Saans lene mein takleef", "Gala kharash", "Sar dard", "Shareer dard", "Behosh pan ya confusion", "Kuch nahi"]
+        touch_options_en: ["Cough", "Shortness of breath", "Sore throat", "Headache", "Body ache", "Fainting or confusion", "None"]
+      - id: other_problems
+        type: multi_choice
+        voice_hi: "Koi aur bimari ya takleef bhi hai?"
+        voice_en: "Any other problems or illnesses?"
+        touch_options_hi: ["Khaansi", "Pet dard", "Ulti-dast", "Sugar/BP", "Kuch nahi"]
+        touch_options_en: ["Cough", "Abdominal pain", "Vomiting/diarrhea", "Diabetes/BP", "None"]
+
+red_flags:
+  - pattern_id: fever_critical
+    chief_complaint: fever
+    match_slots:
+      associated: ["Shortness of breath", "Fainting or confusion"]
+    urgency: urgent
+    message_hi: "Aapke bukhar ke saath saans ya dimaag ke lakshan hain — turant staff se milein."
+    message_en: "Fever with breathing or mental symptoms needs urgent attention. Please alert staff."
