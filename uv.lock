@@ -11,6 +11,7 @@ members = [
     "medikiosk",
     "medikiosk-api",
     "medikiosk-asr",
+    "medikiosk-dialogue",
     "medikiosk-ontology",
     "medikiosk-shared",
     "medikiosk-tts",
@@ -737,6 +738,7 @@ dependencies = [
     { name = "fhir-resources" },
     { name = "medikiosk-api" },
     { name = "medikiosk-asr" },
+    { name = "medikiosk-dialogue" },
     { name = "medikiosk-ontology" },
     { name = "medikiosk-shared" },
     { name = "medikiosk-tts" },
@@ -760,6 +762,7 @@ requires-dist = [
     { name = "fhir-resources", specifier = ">=8.3.0" },
     { name = "medikiosk-api", editable = "services/api" },
     { name = "medikiosk-asr", editable = "services/asr" },
+    { name = "medikiosk-dialogue", editable = "services/dialogue" },
     { name = "medikiosk-ontology", editable = "packages/ontology" },
     { name = "medikiosk-shared", editable = "packages/shared" },
     { name = "medikiosk-tts", editable = "services/tts" },
@@ -822,6 +825,25 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.111" },
     { name = "faster-whisper", specifier = ">=1.0" },
     { name = "numpy", specifier = ">=1.26" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
+]
+
+[[package]]
+name = "medikiosk-dialogue"
+version = "0.1.0"
+source = { editable = "services/dialogue" }
+dependencies = [
+    { name = "fastapi" },
+    { name = "medikiosk-ontology" },
+    { name = "medikiosk-shared" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.111" },
+    { name = "medikiosk-ontology", editable = "packages/ontology" },
+    { name = "medikiosk-shared", editable = "packages/shared" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
 ]
 

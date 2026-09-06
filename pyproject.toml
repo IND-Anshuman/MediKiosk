@@ -15,6 +15,7 @@ dependencies = [
     "medikiosk-asr",
     "python-multipart>=0.0.32",
     "medikiosk-tts",
+    "medikiosk-dialogue",
 ]
 
 [tool.uv.sources]
@@ -23,6 +24,7 @@ medikiosk-ontology = { workspace = true }
 medikiosk-api = { workspace = true }
 medikiosk-asr = { workspace = true }
 medikiosk-tts = { workspace = true }
+medikiosk-dialogue = { workspace = true }
 
 [dependency-groups]
 dev = [
