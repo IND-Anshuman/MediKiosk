@@ -1,0 +1,64 @@
+{#- Deterministic clinical summary (plan T3.8). Facts ONLY from SessionState. -#}
+# Clinical Summary — {{ chief_complaint }}
+{% if framework %}*Framework: {{ framework }}*
+
+{% endif %}
+## Chief Complaint
+- {{ chief_complaint }}
+
+## HPI
+{% if hpi_lines %}
+{% for line in hpi_lines %}
+{{ line }}
+{% endfor %}
+{% else %}
+- No confirmed history slots yet.
+{% endif %}
+
+## Secondary complaints
+{% if secondary %}
+{% for s in secondary %}
+- {{ s }}
+{% endfor %}
+{% else %}
+- None reported
+{% endif %}
+
+## Past Medical/Surgical
+{% for line in past_lines %}
+{{ line }}
+{% endfor %}
+
+## Medications
+{% if meds_lines %}
+{% for line in meds_lines %}
+{{ line }}
+{% endfor %}
+{% else %}
+- None reported
+{% endif %}
+
+## Allergies
+- None reported
+
+## Family/Personal
+- Not elicited in MVP
+
+## Prior Investigations and Timeline
+{% if labs_lines %}
+{% for line in labs_lines %}
+{{ line }}
+{% endfor %}
+{% else %}
+- None available
+{% endif %}
+
+{% if red_flags %}
+## RED FLAGS — IMMEDIATE ATTENTION
+{% for rf in red_flags %}
+- ⚠️ {{ rf.message_en }}
+{% endfor %}
+{% endif %}
+
+---
+*AI-generated draft — physician must verify*

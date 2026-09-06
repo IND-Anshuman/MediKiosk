@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {"name": "hemoglobin", "synonyms": ["hemoglobin", "haemoglobin", "hb", "hgb", "हीमोग्लोबिन"], "units": ["g/dL"]},
+    {"name": "wbc", "synonyms": ["wbc", "total leucocyte count", "tlc", "leucocyte count", "व्हाइट ब्लड सेल"], "units": ["/cumm", "cells/cumm", "10^3/uL"]},
+    {"name": "platelets", "synonyms": ["platelets", "platelet count", "plt", "प्लेटलेट"], "units": ["/cumm", "lakhs/cumm", "10^3/uL"]},
+    {"name": "hba1c", "synonyms": ["hba1c", "hb a1c", "a1c", "glycated hemoglobin", "एचबीए1सी"], "units": ["%"]},
+    {"name": "fasting_glucose", "synonyms": ["fasting glucose", "fasting blood sugar", "fbs", "fpg", "उपवास शुगर"], "units": ["mg/dL"]},
+    {"name": "creatinine", "synonyms": ["creatinine", "serum creatinine", "क्रिएटिनिन"], "units": ["mg/dL"]},
+    {"name": "tsh", "synonyms": ["tsh", "thyroid stimulating hormone", "टीएसएच"], "units": ["uIU/mL"]},
+    {"name": "bilirubin", "synonyms": ["bilirubin", "total bilirubin", "serum bilirubin", "बिलिरुबिन"], "units": ["mg/dL"]},
+    {"name": "rbs", "synonyms": ["rbs", "random blood sugar", "रैंडम शुगर"], "units": ["mg/dL"]},
+    {"name": "urea", "synonyms": ["urea", "blood urea", "यूरिया"], "units": ["mg/dL"]},
+    {"name": "sgpt", "synonyms": ["sgpt", "alt", "alanine transaminase", "एसजीपीटी"], "units": ["U/L"]},
+    {"name": "sgot", "synonyms": ["sgot", "ast", "aspartate transaminase", "एसजीओटी"], "units": ["U/L"]},
+    {"name": "esr", "synonyms": ["esr", "erythrocyte sedimentation rate", "ईएसआर"], "units": ["mm/hr"]},
+    {"name": "cholesterol", "synonyms": ["cholesterol", "total cholesterol", "serum cholesterol", "कोलेस्ट्रॉल"], "units": ["mg/dL"]},
+    {"name": "vitamin_b12", "synonyms": ["vitamin b12", "b12", "cobalamin", "विटामिन बी12"], "units": ["pg/mL"]}
+  ]
+}

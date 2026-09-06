@@ -1,0 +1,16 @@
+[project]
+name = "medikiosk-ner"
+version = "0.1.0"
+description = "Pure rule-based clinical NER: dictionary match + regex (no ML, deterministic)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["medikiosk_ner"]

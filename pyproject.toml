@@ -17,8 +17,9 @@ dependencies = [
     "medikiosk-tts",
     "medikiosk-dialogue",
     "medikiosk-ocr",
+    "medikiosk-ner",
     "openai>=3.8.0",
-]
+    ]
 
 [tool.uv.sources]
 medikiosk-shared = { workspace = true }
@@ -27,7 +28,9 @@ medikiosk-api = { workspace = true }
 medikiosk-asr = { workspace = true }
 medikiosk-tts = { workspace = true }
 medikiosk-dialogue = { workspace = true }
+medikiosk-summarizer = { workspace = true }
 medikiosk-ocr = { workspace = true }
+medikiosk-ner = { workspace = true }
 
 [dependency-groups]
 dev = [
