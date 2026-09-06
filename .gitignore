@@ -216,3 +216,35 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# === MediKiosk v2 (plan: 2026-09-07_001609) ===
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+pnpm-debug.log*
+
+# Python venvs / caches (repo-wide)
+.venv/
+venv/
+.python-version
+
+# Local databases & generated artifacts
+*.db
+*.db-journal
+data/out/
+data/fhir-outbox/
+data/models/
+models/
+
+# Pre-baked TTS audio is build output — rebuild via `make bake-tts`
+services/tts/audio/
+
+# Fixtures with generated noisy variants
+tests/fixtures/audio/noisy_*
+
+# Secrets
+.env
+.env.*
+!.env.example
