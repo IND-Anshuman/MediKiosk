@@ -1,69 +1,78 @@
-import Image from "next/image";
+"use client";
 
+import { useState } from "react";
+import ConsentFlow from "@/components/ConsentFlow";
+import { ComplaintPicker } from "@/components/IntakeView";
+import IntakePageInner from "@/components/IntakeView";
+import DocumentsView from "@/components/DocumentsView";
+import { setLang, type Lang } from "@/lib/i18n";
+
+/** Patient journey (plan 3.4): lang -> consent -> complaint -> intake -> documents */
 export default function Home() {
+  const [stage, setStage] = useState<"lang" | "consent" | "complaint" | "intake" | "docs">("lang");
+  const [sessionId] = useState(() => `sess-${Math.random().toString(36).slice(2, 10)}`);
+  const [complaint, setComplaint] = useState("chest_pain");
+
+  if (stage === "lang") {
+    return <LangStage onPicked={(l: Lang) => { setLang(l); setStage("consent"); }} />;
+  }
+  if (stage === "consent") {
+    return <ConsentFlow sessionId={sessionId} onGranted={() => setStage("complaint")} />;
+  }
+  if (stage === "complaint") {
+    return (
+      <ComplaintPicker
+        onSelect={(cc) => {
+          setComplaint(cc);
+          setStage("intake");
+        }}
+      />
+    );
+  }
+  if (stage === "intake") {
+    return (
+      <div>
+        <IntakePageInner sessionId={sessionId} lang="hi" complaint={complaint} />
+        <div className="pb-6 text-center">
+          <button
+            data-testid="to-documents"
+            onClick={() => setStage("docs")}
+            className="rounded-xl border border-slate-300 px-6 py-3 text-slate-700"
+          >
+            → 📄
+          </button>
+        </div>
+      </div>
+    );
+  }
+  return <DocumentsView sessionId={sessionId} />;
+}
+
+function LangStage({ onPicked }: { onPicked: (l: Lang) => void }) {
+  // minimal inline picker (same testids as LanguagePicker component contract)
+  const pick = (l: Lang) => {
+    setLang(l);
+    onPicked(l);
+  };
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-slate-50">
+      <h1 className="text-4xl font-bold text-slate-900">स्वागत है / Welcome</h1>
+      <div className="flex gap-6">
+        <button
+          data-testid="lang-hi"
+          onClick={() => pick("hi")}
+          className="rounded-2xl border-4 border-slate-300 bg-white px-16 py-10 text-3xl font-semibold"
+        >
+          हिन्दी
+        </button>
+        <button
+          data-testid="lang-en"
+          onClick={() => pick("en")}
+          className="rounded-2xl border-4 border-slate-300 bg-white px-16 py-10 text-3xl font-semibold"
+        >
+          English
+        </button>
+      </div>
+    </main>
   );
 }
