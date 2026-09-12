@@ -246,3 +246,64 @@ def bundle_endpoint(req: SummarizeRequest):
 def push_endpoint(req: SummarizeRequest):
     session = SessionState.model_validate(req.session)
     return push(session)
+
+
+# ── Integration endpoints (plan G1–G7) ─────────────────────────────────────
+
+
+@app.get("/integrations/abdm/status")
+def abdm_status():
+    from medikiosk_fhir.adapters.abdm_sandbox import AbdmSandboxAdapter
+    adapter = AbdmSandboxAdapter()
+    return {
+        "enabled": adapter.enabled,
+        "base_url": adapter.base if adapter.enabled else None,
+    }
+
+
+@app.post("/integrations/abdm/create-abha")
+def create_abha_endpoint(req: dict):
+    from medikiosk_fhir.adapters.abdm_sandbox import AbdmSandboxAdapter
+    adapter = AbdmSandboxAdapter()
+    res = adapter.create_abha(
+        mobile=req.get("mobile", ""),
+        name=req.get("name", ""),
+        gender=req.get("gender", "M"),
+        year_of_birth=int(req.get("year_of_birth", 1980)),
+    )
+    return {"abha": res}
+
+
+@app.get("/integrations/pmjay/eligibility")
+def pmjay_eligibility(abha: str, name: str | None = None):
+    from medikiosk_fhir.adapters.pmjay import PmjayAdapter
+    adapter = PmjayAdapter()
+    return adapter.check_eligibility(abha=abha, name=name)
+
+
+@app.get("/integrations/idsp/export.csv")
+def idsp_export(district: str, week: int, year: int, syndromes: str):
+    """syndromes as JSON: {"fever": 12, "cough": 8}"""
+    import json as _json
+    try:
+        syndrome_map = _json.loads(syndromes)
+    except Exception:
+        syndrome_map = {}
+    from medikiosk_fhir.adapters.idsp import IdspExportRenderer
+    renderer = IdspExportRenderer()
+    payload = {"district": district, "week": week, "year": year, "syndromes": syndrome_map}
+    csv_bytes = renderer.render_csv(payload)
+    from fastapi.responses import Response
+    return Response(content=csv_bytes, media_type="text/csv")
+
+
+@app.post("/integrations/esanjeevani/handoff")
+def esanjeevani_handoff(req: SummarizeRequest):
+    from medikiosk_fhir.adapters.esanjeevani import EsanjeevaniHandoff
+    session = req.session
+    packet = EsanjeevaniHandoff.build_packet(session)
+    return {
+        "format": packet["format"],
+        "qr_payload": packet["qr_payload"],
+        "summary": packet["summary"],
+    }

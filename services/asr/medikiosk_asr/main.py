@@ -78,6 +78,10 @@ def _sigmoid(x: float) -> float:
     return 1.0 / (1.0 + math.exp(-x))
 
 
+def _backend() -> str:
+    return os.getenv("LANG_BACKEND", "local")
+
+
 @app.post("/transcribe")
 async def transcribe(audio: UploadFile = File(...)):
     if audio.content_type not in ALLOWED_MIME:
@@ -85,6 +89,10 @@ async def transcribe(audio: UploadFile = File(...)):
     data = await audio.read()
     if not data:
         raise HTTPException(422, "empty audio")
+    if _backend() == "bhashini":
+        from medikiosk_asr.bhashini_backend import transcribe as bh_transcribe
+        text, lang = bh_transcribe(data)
+        return {"text": text, "language": lang, "confidence": 1.0, "needs_confirmation": False}
     text, language, confidence = _transcribe(data)
     return {
         "text": text,

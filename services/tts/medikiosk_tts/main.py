@@ -58,7 +58,12 @@ async def synth(text: str, lang: str = "hi"):
     cache_key = hashlib.sha1(f"{lang}:{text}".encode()).hexdigest()
     if cache_key in _cache:
         return Response(content=_cache[cache_key], media_type="audio/mpeg")
-    audio = await _synthesize(text, lang)
+    backend = os.getenv("LANG_BACKEND", "edge")
+    if backend == "bhashini":
+        from medikiosk_tts.bhashini_backend import synthesize as bh_synthesize
+        audio = bh_synthesize(text, lang=lang)
+    else:
+        audio = await _synthesize(text, lang)
     if len(_cache) > 500:
         _cache.clear()
     _cache[cache_key] = audio
