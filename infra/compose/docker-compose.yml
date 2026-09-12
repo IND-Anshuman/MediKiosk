@@ -1,0 +1,191 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: medikiosk
+      POSTGRES_USER: medikiosk
+      POSTGRES_PASSWORD: medikiosk
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medikiosk"]
+      interval: 5s
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: medikiosk
+      MINIO_ROOT_PASSWORD: medikiosk123
+    ports: ["9000:9000", "9001:9001"]
+    volumes: [miniodata:/data]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+
+  api:
+    build:
+      context: ../services/api
+      dockerfile: ../../infra/docker/Dockerfile.api
+    ports: ["8000:8000"]
+    environment:
+      DATABASE_URL: postgresql://medikiosk:medikiosk@postgres:5432/medikiosk
+      REDIS_URL: redis://redis:6379/0
+      CORS_ALLOW: "*"
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/healthz"]
+      interval: 5s
+
+  asr:
+    build:
+      context: ../services/asr
+      dockerfile: ../../infra/docker/Dockerfile.asr
+    ports: ["8001:8001"]
+    environment:
+      ASR_MODEL: small
+      ASR_DEVICE: cpu
+      ASR_COMPUTE: int8
+      LANG_BACKEND: ${LANG_BACKEND:-local}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8001/healthz"]
+      interval: 5s
+
+  tts:
+    build:
+      context: ../services/tts
+      dockerfile: ../../infra/docker/Dockerfile.tts
+    ports: ["8002:8002"]
+    volumes:
+      - ../../services/tts/audio:/app/audio:ro
+    environment:
+      LANG_BACKEND: ${LANG_BACKEND:-local}
+      BHASHINI_ULCA_API_KEY: ${BHASHINI_ULCA_API_KEY:-}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8002/healthz"]
+      interval: 5s
+
+  dialogue:
+    build:
+      context: ../services/dialogue
+      dockerfile: ../../infra/docker/Dockerfile.dialogue
+    ports: ["8003:8003"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      LLM_BACKEND: ${LLM_BACKEND:-stub}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+    depends_on:
+      - redis
+      - asr
+      - tts
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8003/healthz"]
+      interval: 5s
+
+  ocr:
+    build:
+      context: ../services/ocr
+      dockerfile: ../../infra/docker/Dockerfile.ocr
+    ports: ["8004:8004"]
+    environment:
+      OCR_BACKEND: ${OCR_BACKEND:-stub}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8004/healthz"]
+      interval: 5s
+
+  ner:
+    build:
+      context: ../services/ner
+      dockerfile: ../../infra/docker/Dockerfile.ner
+    ports: ["8005:8005"]
+    environment:
+      NER_BACKEND: ${NER_BACKEND:-rule}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8005/healthz"]
+      interval: 5s
+
+  docintel:
+    build:
+      context: ../services/docintel
+      dockerfile: ../../infra/docker/Dockerfile.docintel
+    ports: ["8006:8006"]
+    environment:
+      NER_URL: http://ner:8005
+      OCR_URL: http://ocr:8004
+    depends_on:
+      - ner
+      - ocr
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8006/healthz"]
+      interval: 5s
+
+  summarizer:
+    build:
+      context: ../services/summarizer
+      dockerfile: ../../infra/docker/Dockerfile.summarizer
+    ports: ["8007:8007"]
+    environment:
+      LLM_BACKEND: ${LLM_BACKEND:-stub}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8007/healthz"]
+      interval: 5s
+
+  fhir:
+    build:
+      context: ../services/fhir
+      dockerfile: ../../infra/docker/Dockerfile.fhir
+    ports: ["8008:8008"]
+    environment:
+      HIS_FHIR_URL: ${HIS_FHIR_URL:-}
+      HIS_FHIR_OUTBOX: ${HIS_FHIR_OUTBOX:-data/fhir-outbox}
+      ABDM_BASE_URL: ${ABDM_BASE_URL:-https://sandbox.abdm.gov.in}
+      ABDM_CLIENT_ID: ${ABDM_CLIENT_ID:-}
+      ABDM_CLIENT_SECRET: ${ABDM_CLIENT_SECRET:-}
+      PMJAY_HOSPITAL_ID: ${PMJAY_HOSPITAL_ID:-}
+      PMJAY_API_KEY: ${PMJAY_API_KEY:-}
+      PMJAY_STATE_PACK: ${PMJAY_STATE_PACK:-}
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8008/healthz"]
+      interval: 5s
+
+  web:
+    build:
+      context: ../../apps/web
+      dockerfile: ../../infra/docker/Dockerfile.web
+    ports: ["3000:3000"]
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_WS_URL: ws://localhost:8000
+    depends_on:
+      api: { condition: service_healthy }
+      dialogue: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health"]
+      interval: 5s
+
+volumes:
+  pgdata: {}
+  miniodata: {}
