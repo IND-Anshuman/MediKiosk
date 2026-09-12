@@ -1,7 +1,13 @@
+# Built from repo root (uv-workspace monorepo): services depend on
+# medikiosk-shared / medikiosk-ontology packages, which pip cannot resolve
+# in isolation. Context must be the repo root.
 FROM python:3.11-slim
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY pyproject.toml .
-RUN pip install --no-cache-dir -e ".[dev]"
-COPY . .
+# deps first for layer-caching
+COPY pyproject.toml uv.lock ./
+COPY packages packages
+COPY services services
+RUN pip install --no-cache-dir uv && uv sync --frozen --no-dev
 EXPOSE 8008
-CMD ["uv", "run", "uvicorn", "medikiosk_fhir.main:app", "--host", "0.0.0.0", "--port", "8008"]
+CMD [uv, run, uvicorn, medikiosk_fhir.main:app, --host, 0.0.0.0, --port, 8008]

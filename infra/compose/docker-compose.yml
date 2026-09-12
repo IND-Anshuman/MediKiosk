@@ -34,8 +34,8 @@ services:
 
   api:
     build:
-      context: ../services/api
-      dockerfile: ../../infra/docker/Dockerfile.api
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.api
     ports: ["8000:8000"]
     environment:
       DATABASE_URL: postgresql://medikiosk:medikiosk@postgres:5432/medikiosk
@@ -50,8 +50,8 @@ services:
 
   asr:
     build:
-      context: ../services/asr
-      dockerfile: ../../infra/docker/Dockerfile.asr
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.asr
     ports: ["8001:8001"]
     environment:
       ASR_MODEL: small
@@ -71,8 +71,8 @@ services:
 
   tts:
     build:
-      context: ../services/tts
-      dockerfile: ../../infra/docker/Dockerfile.tts
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.tts
     ports: ["8002:8002"]
     volumes:
       - ../../services/tts/audio:/app/audio:ro
@@ -85,8 +85,8 @@ services:
 
   dialogue:
     build:
-      context: ../services/dialogue
-      dockerfile: ../../infra/docker/Dockerfile.dialogue
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.dialogue
     ports: ["8003:8003"]
     environment:
       REDIS_URL: redis://redis:6379/0
@@ -103,8 +103,8 @@ services:
 
   ocr:
     build:
-      context: ../services/ocr
-      dockerfile: ../../infra/docker/Dockerfile.ocr
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.ocr
     ports: ["8004:8004"]
     environment:
       OCR_BACKEND: ${OCR_BACKEND:-stub}
@@ -114,8 +114,8 @@ services:
 
   ner:
     build:
-      context: ../services/ner
-      dockerfile: ../../infra/docker/Dockerfile.ner
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.ner
     ports: ["8005:8005"]
     environment:
       NER_BACKEND: ${NER_BACKEND:-rule}
@@ -125,8 +125,8 @@ services:
 
   docintel:
     build:
-      context: ../services/docintel
-      dockerfile: ../../infra/docker/Dockerfile.docintel
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.docintel
     ports: ["8006:8006"]
     environment:
       NER_URL: http://ner:8005
@@ -140,8 +140,8 @@ services:
 
   summarizer:
     build:
-      context: ../services/summarizer
-      dockerfile: ../../infra/docker/Dockerfile.summarizer
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.summarizer
     ports: ["8007:8007"]
     environment:
       LLM_BACKEND: ${LLM_BACKEND:-stub}
@@ -153,8 +153,8 @@ services:
 
   fhir:
     build:
-      context: ../services/fhir
-      dockerfile: ../../infra/docker/Dockerfile.fhir
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.fhir
     ports: ["8008:8008"]
     environment:
       HIS_FHIR_URL: ${HIS_FHIR_URL:-}
