@@ -12,9 +12,10 @@ v1 bugs fixed here:
 
 from __future__ import annotations
 
+import os
 from typing import Any, Protocol
 
-from medikiosk_ontology.loader import Ontology, Question
+from medikiosk_ontology.loader import Ontology, Question, load_ontology
 from medikiosk_shared.models import (
     Answer,
     ChiefComplaint,
@@ -219,3 +220,100 @@ def _fuzzy_snap(choice: str, q: Question) -> str:
         if low in opt.lower() or opt.lower() in low:
             return opt
     return choice
+
+
+# ── HTTP service layer (plan v2: independent FastAPI service, port 8003) ────
+# Mechanically simple: build engine against Redis + a swappable LLM, expose
+# /healthz, /dialogue/start, /dialogue/answer. Session state stays in the
+# store between requests (AD-9: no in-process dict).
+
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI(title="medikiosk-dialogue")
+
+_engine = None
+
+
+class SessionStoreImpl:
+    """Redis-backed SessionStore (AD-9). Matches the SessionStore protocol."""
+
+    def __init__(self) -> None:
+        import redis
+
+        self.r = redis.Redis.from_url(
+            os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+            decode_responses=True,
+        )
+        self._ttl = 60 * 60 * 4  # sliding 4h, matches API gateway
+
+    def save(self, state: SessionState) -> None:
+        self.r.set(f"session:{state.session_id}", state.model_dump_json(), ex=self._ttl)
+
+    def load(self, session_id: str) -> SessionState | None:
+        raw = self.r.get(f"session:{session_id}")
+        if not raw:
+            return None
+        return SessionState.model_validate_json(raw)
+
+
+def get_engine():
+    global _engine
+    if _engine is None:
+        onto = load_ontology(Path(os.getenv("ONTOLOGY_DIR", "packages/ontology/data")))
+        if os.getenv("LLM_BACKEND", "stub") == "openai":
+            from medikiosk_dialogue.openai_llm import OpenAILLM
+            llm: LLM = OpenAILLM()
+        else:
+            from medikiosk_dialogue import stub_llm
+            llm = stub_llm.StubLLM()
+        _engine = DialogueEngine(onto, llm, SessionStoreImpl())
+    return _engine
+
+
+@app.get("/healthz")
+def healthz():
+    return {"ok": True}
+
+
+class StartReq(BaseModel):
+    chief_complaint: str
+    language: str = "hi"
+
+
+@app.post("/dialogue/start")
+def start(req: StartReq):
+    e = get_engine()
+    if req.chief_complaint not in e.ontology.chief_complaints:
+        raise HTTPException(422, f"unknown chief complaint: {req.chief_complaint}")
+    sid = e.start_session(chief_complaint=req.chief_complaint, language=req.language)
+    nq = e.next_question(sid)
+    return {"session_id": sid, "next_question": nq.model_dump() if nq else None}
+
+
+class AnswerReq(BaseModel):
+    session_id: str
+    raw_text: str | None = None
+    touch_indices: list[int] | None = None
+    language: str = "hi"
+    asr_confidence: float | None = None
+    confirm: bool | None = None
+
+
+@app.post("/dialogue/answer")
+def answer(req: AnswerReq):
+    e = get_engine()
+    try:
+        resp = e.answer(
+            req.session_id,
+            raw_text=req.raw_text,
+            touch_indices=req.touch_indices,
+            language=req.language,
+            asr_confidence=req.asr_confidence,
+            confirm=req.confirm,
+        )
+    except KeyError:
+        raise HTTPException(404, f"unknown session {req.session_id}")
+    return resp
