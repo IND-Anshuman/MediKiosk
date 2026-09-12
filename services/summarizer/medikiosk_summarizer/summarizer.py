@@ -206,7 +206,7 @@ class _OpenAIPhrasifier:
 
     def __init__(self, client: Any):
         self.client = client
-        self.model = os.getenv("LLM_MODEL", "gpt-4o-mini")
+        self.model = os.getenv("FEATHERLESS_MODEL") or os.getenv("LLM_MODEL", "gpt-4o-mini")
 
     def phrasify(self, text: str, language: str) -> str:
         resp = self.client.chat.completions.create(

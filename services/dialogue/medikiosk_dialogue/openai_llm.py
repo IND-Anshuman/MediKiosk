@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Protocol
+from typing import Any, Protocol
 
 
 class LLM(Protocol):
@@ -10,14 +10,27 @@ class LLM(Protocol):
 
 
 class OpenAILLM:
-    """Real LLM slot-filler (plan AD-3: prompt-hygiene, injectable client)."""
+    """Real LLM slot-filler (plan AD-3: prompt-hygiene, injectable client).
 
-    def __init__(self, client=None):
-        if client is None:
+    Backend selection: when FEATHERLESS_API_KEY is set, point at Featherless's
+    OpenAI-compatible endpoint + model; otherwise fall back to OPENAI_*. If no
+    key is present the client stays None and extract() degrades to {} — the
+    service never hard-fails without credentials.
+    """
+
+    def __init__(self, client: Any | None = None):
+        self._client = client
+        self._api_key = os.getenv("FEATHERLESS_API_KEY") or os.getenv("OPENAI_API_KEY", "")
+        self._base_url = os.getenv("FEATHERLESS_BASE_URL", "") or None
+        self.model = os.getenv("FEATHERLESS_MODEL") or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+    @property
+    def client(self) -> Any | None:
+        if self._client is None and self._api_key:
             from openai import OpenAI
-            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
-        self.client = client
-        self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+            self._client = OpenAI(api_key=self._api_key, base_url=self._base_url)
+        return self._client
 
     def extract(
         self,
@@ -28,14 +41,16 @@ class OpenAILLM:
         context: dict | None = None,
     ) -> dict:
         # AD-3: PII from `context` is intentionally NOT forwarded to the LLM.
-        # Only the utterance text + schema travel over the wire.
+        client = self.client
+        if client is None:
+            return {}
         sys = (
             "You extract structured clinical information from patient speech.\n"
             "Return ONLY valid JSON matching the given schema. No prose.\n"
             "Do not infer fields not present in the text."
         )
         try:
-            r = self.client.chat.completions.create(
+            r = client.chat.completions.create(
                 model=self.model,
                 temperature=0,
                 messages=[

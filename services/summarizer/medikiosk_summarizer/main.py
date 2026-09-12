@@ -9,6 +9,7 @@ phrasify degrades to raw text). No PII is required for the render itself.
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from fastapi import FastAPI, Request
@@ -24,12 +25,16 @@ class SummarizeRequest(BaseModel):
 
 
 def _default_summarizer() -> Summarizer:
-    # Live OpenAI client only constructed when an API key exists; phrasify
-    # degrades to raw text otherwise, so the endpoint never hard-fails.
+    # Live client only constructed when credentials exist; phrasify degrades
+    # to raw text otherwise, so the endpoint never hard-fails. Prefers
+    # Featherless (OpenAI-compatible) when FEATHERLESS_API_KEY is set.
+    api_key = os.getenv("FEATHERLESS_API_KEY") or os.getenv("OPENAI_API_KEY", "")
+    if not api_key:
+        return Summarizer(client=None)
     try:
         from openai import OpenAI
 
-        client = OpenAI()
+        client = OpenAI(api_key=api_key, base_url=os.getenv("FEATHERLESS_BASE_URL", "") or None)
         return Summarizer(client=client)
     except Exception:
         return Summarizer(client=None)

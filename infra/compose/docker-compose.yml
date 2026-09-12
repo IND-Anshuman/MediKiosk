@@ -68,17 +68,17 @@ services:
       interval: 5s
 
   tts:
-      build:
-        context: ../..
-        dockerfile: infra/docker/Dockerfile.tts
-      ports: ["8002:8002"]
-      environment:
-        TTS_AUDIO_DIR: /app/services/tts/audio
-        LANG_BACKEND: ${LANG_BACKEND:-local}
-        BHASHINI_ULCA_API_KEY: ${BHASHINI_ULCA_API_KEY:-}
-      healthcheck:
-        test: ["CMD-SHELL", "curl -f http://localhost:8002/healthz"]
-        interval: 5s
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.tts
+    ports: ["8002:8002"]
+    environment:
+      TTS_AUDIO_DIR: /app/services/tts/audio
+      LANG_BACKEND: ${LANG_BACKEND:-local}
+      BHASHINI_ULCA_API_KEY: ${BHASHINI_ULCA_API_KEY:-}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8002/healthz"]
+      interval: 5s
 
   dialogue:
     build:
@@ -90,6 +90,9 @@ services:
       LLM_BACKEND: ${LLM_BACKEND:-stub}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      FEATHERLESS_API_KEY: ${FEATHERLESS_API_KEY:-}
+      FEATHERLESS_BASE_URL: ${FEATHERLESS_BASE_URL:-https://api.featherless.ai/v1}
+      FEATHERLESS_MODEL: ${FEATHERLESS_MODEL:-gpt-4o-mini}
     depends_on:
       - redis
       - asr
@@ -144,6 +147,9 @@ services:
       LLM_BACKEND: ${LLM_BACKEND:-stub}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      FEATHERLESS_API_KEY: ${FEATHERLESS_API_KEY:-}
+      FEATHERLESS_BASE_URL: ${FEATHERLESS_BASE_URL:-https://api.featherless.ai/v1}
+      FEATHERLESS_MODEL: ${FEATHERLESS_MODEL:-gpt-4o-mini}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8007/healthz"]
       interval: 5s
@@ -180,8 +186,8 @@ services:
       api: { condition: service_healthy }
       dialogue: { condition: service_healthy }
     healthcheck:
-          test: ["CMD-SHELL", "curl -f http://localhost:3000/"]
-          interval: 5s
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/"]
+      interval: 5s
 
 volumes:
   pgdata: {}
