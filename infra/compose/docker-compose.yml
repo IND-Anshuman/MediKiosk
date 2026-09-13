@@ -89,10 +89,8 @@ services:
       REDIS_URL: redis://redis:6379/0
       LLM_BACKEND: ${LLM_BACKEND:-stub}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
-      FEATHERLESS_API_KEY: ${FEATHERLESS_API_KEY:-}
-      FEATHERLESS_BASE_URL: ${FEATHERLESS_BASE_URL:-https://api.featherless.ai/v1}
-      FEATHERLESS_MODEL: ${FEATHERLESS_MODEL:-gpt-4o-mini}
     depends_on:
       - redis
       - asr
@@ -146,10 +144,8 @@ services:
     environment:
       LLM_BACKEND: ${LLM_BACKEND:-stub}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
-      FEATHERLESS_API_KEY: ${FEATHERLESS_API_KEY:-}
-      FEATHERLESS_BASE_URL: ${FEATHERLESS_BASE_URL:-https://api.featherless.ai/v1}
-      FEATHERLESS_MODEL: ${FEATHERLESS_MODEL:-gpt-4o-mini}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8007/healthz"]
       interval: 5s

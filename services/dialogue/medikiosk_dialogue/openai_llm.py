@@ -12,17 +12,20 @@ class LLM(Protocol):
 class OpenAILLM:
     """Real LLM slot-filler (plan AD-3: prompt-hygiene, injectable client).
 
-    Backend selection: when FEATHERLESS_API_KEY is set, point at Featherless's
-    OpenAI-compatible endpoint + model; otherwise fall back to OPENAI_*. If no
-    key is present the client stays None and extract() degrades to {} — the
-    service never hard-fails without credentials.
+    One OpenAI-compatible config for ANY provider:
+      OPENAI_API_KEY   — credential (required for live LLM)
+      OPENAI_BASE_URL  — endpoint; omit for api.openai.com. Point it at
+                         Featherless, Groq, Together, vLLM, Ollama, etc.
+      OPENAI_MODEL     — the model id (e.g. gpt-4o-mini, zai-org/glm-5.3-flash)
+    If no key is set the client stays None and extract() degrades to {} —
+    the service never hard-fails without credentials.
     """
 
     def __init__(self, client: Any | None = None):
         self._client = client
-        self._api_key = os.getenv("FEATHERLESS_API_KEY") or os.getenv("OPENAI_API_KEY", "")
-        self._base_url = os.getenv("FEATHERLESS_BASE_URL", "") or None
-        self.model = os.getenv("FEATHERLESS_MODEL") or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+        self._api_key = os.getenv("OPENAI_API_KEY", "")
+        self._base_url = os.getenv("OPENAI_BASE_URL", "") or None
+        self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
     @property
     def client(self) -> Any | None:

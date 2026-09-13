@@ -26,15 +26,16 @@ class SummarizeRequest(BaseModel):
 
 def _default_summarizer() -> Summarizer:
     # Live client only constructed when credentials exist; phrasify degrades
-    # to raw text otherwise, so the endpoint never hard-fails. Prefers
-    # Featherless (OpenAI-compatible) when FEATHERLESS_API_KEY is set.
-    api_key = os.getenv("FEATHERLESS_API_KEY") or os.getenv("OPENAI_API_KEY", "")
+    # to raw text otherwise, so the endpoint never hard-fails. One
+    # OpenAI-compatible config: OPENAI_API_KEY + OPENAI_BASE_URL (any
+    # provider — OpenAI, Featherless, Groq, Together, local vLLM/Ollama).
+    api_key = os.getenv("OPENAI_API_KEY", "")
     if not api_key:
         return Summarizer(client=None)
     try:
         from openai import OpenAI
 
-        client = OpenAI(api_key=api_key, base_url=os.getenv("FEATHERLESS_BASE_URL", "") or None)
+        client = OpenAI(api_key=api_key, base_url=os.getenv("OPENAI_BASE_URL", "") or None)
         return Summarizer(client=client)
     except Exception:
         return Summarizer(client=None)
