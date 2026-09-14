@@ -1,0 +1,68 @@
+{
+  "allergy_classes": {
+    "penicillin": {
+      "name": "Penicillin & Beta-lactams",
+      "members": [
+        "penicillin",
+        "amoxicillin",
+        "amoxicillin_clavulanate",
+        "ampicillin",
+        "piperacillin",
+        "cloxacillin"
+      ],
+      "note": "Immediate hypersensitivity risk including anaphylaxis, urticaria, and angioedema."
+    },
+    "cephalosporin": {
+      "name": "Cephalosporins",
+      "members": [
+        "cephalexin",
+        "cefixime",
+        "ceftriaxone",
+        "cefuroxime",
+        "cefadroxil"
+      ],
+      "note": "Risk of severe allergic reaction; potential cross-reactivity in beta-lactam allergic patients."
+    },
+    "sulfonamide": {
+      "name": "Sulfonamides (Sulfa drugs)",
+      "members": [
+        "sulfamethoxazole",
+        "cotrimoxazole",
+        "sulfasalazine",
+        "sulfadiazine"
+      ],
+      "note": "Risk of severe cutaneous adverse reactions (SCAR), Stevens-Johnson syndrome, and fever."
+    },
+    "nsaid": {
+      "name": "Non-steroidal Anti-inflammatory Drugs (NSAIDs / Aspirin)",
+      "members": [
+        "aspirin",
+        "ibuprofen",
+        "diclofenac",
+        "naproxen",
+        "aceclofenac",
+        "piroxicam"
+      ],
+      "note": "Aspirin-exacerbated respiratory disease (AERD), bronchospasm, or severe urticaria."
+    },
+    "fluoroquinolone": {
+      "name": "Fluoroquinolones",
+      "members": [
+        "ciprofloxacin",
+        "levofloxacin",
+        "ofloxacin",
+        "norfloxacin"
+      ],
+      "note": "Hypersensitivity reaction, anaphylactoid reaction, or phototoxicity."
+    },
+    "macrolide": {
+      "name": "Macrolides",
+      "members": [
+        "azithromycin",
+        "clarithromycin",
+        "erythromycin"
+      ],
+      "note": "Macrolide hypersensitivity reaction."
+    }
+  }
+}

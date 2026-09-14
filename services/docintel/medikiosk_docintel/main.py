@@ -18,6 +18,7 @@ from medikiosk_docintel.intel import (
     build_timeline,
     check_interactions,
     classify,
+    evaluate_clinical_safety,
     extract_date,
     flag_labs,
 )
@@ -31,6 +32,10 @@ app = FastAPI(title="MediKiosk DocIntel", version="0.1.0")
 class ProcessRequest(BaseModel):
     text: str = Field(min_length=1)
     doc_id: str | None = None
+    conditions: list[str] = Field(default_factory=list)
+    allergies: list[str] = Field(default_factory=list)
+    age: int | None = None
+    sex: str | None = None
 
 
 @app.get("/healthz")
@@ -49,13 +54,22 @@ def process(req: ProcessRequest):
             # coerce dicts → LabExtract so abnormal-flagging returns typed models
             __import__("medikiosk_shared.models", fromlist=["LabExtract"]).LabExtract.model_validate(l)
             for l in ents["labs"]
-        ]
+        ],
+        age=req.age,
+        sex=req.sex,
     )
     meds = [
         __import__("medikiosk_shared.models", fromlist=["MedExtract"]).MedExtract.model_validate(m)
         for m in ents["drugs"]
     ]
     interactions = check_interactions(meds)
+    safety_alerts = evaluate_clinical_safety(
+        meds=meds,
+        conditions=req.conditions,
+        allergies=req.allergies,
+        age=req.age,
+        sex=req.sex,
+    )
     doc = DocumentRecord(
         doc_id=req.doc_id or f"doc-auto",
         kind=kind,
@@ -67,5 +81,6 @@ def process(req: ProcessRequest):
     timeline = build_timeline([doc])
     return doc.model_dump(mode="json") | {
         "interactions": interactions,
+        "safety_alerts": [a.model_dump(mode="json") for a in safety_alerts],
         "timeline_label": timeline[0][1],
     }

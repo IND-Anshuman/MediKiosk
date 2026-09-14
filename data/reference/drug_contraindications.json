@@ -1,0 +1,120 @@
+{
+  "contraindications": [
+    {
+      "drug": "propranolol",
+      "condition": "asthma",
+      "severity": "critical",
+      "note": "Non-selective beta-blocker causes potent bronchoconstriction; contraindicated in asthma and COPD."
+    },
+    {
+      "drug": "atenolol",
+      "condition": "asthma",
+      "severity": "major",
+      "note": "Beta-blocker carries risk of bronchospasm in reactive airway disease."
+    },
+    {
+      "drug": "timolol",
+      "condition": "asthma",
+      "severity": "critical",
+      "note": "Beta-blocker contraindicated in asthma and reactive airway disease."
+    },
+    {
+      "drug": "metoprolol",
+      "condition": "asthma",
+      "severity": "major",
+      "note": "Beta-blocker carries risk of bronchoconstriction in reactive airway disease."
+    },
+    {
+      "drug": "diclofenac",
+      "condition": "peptic_ulcer",
+      "severity": "major",
+      "note": "NSAID causes gastric mucosal ulceration, erosions, and GI hemorrhage."
+    },
+    {
+      "drug": "ibuprofen",
+      "condition": "peptic_ulcer",
+      "severity": "major",
+      "note": "NSAID inhibits protective prostaglandins, aggravating peptic ulcer and GI bleeding."
+    },
+    {
+      "drug": "aspirin",
+      "condition": "peptic_ulcer",
+      "severity": "major",
+      "note": "Direct mucosal injury and antiplatelet effect increase severe GI hemorrhage risk."
+    },
+    {
+      "drug": "naproxen",
+      "condition": "peptic_ulcer",
+      "severity": "major",
+      "note": "Non-selective NSAID increases gastrointestinal ulceration and bleeding risk."
+    },
+    {
+      "drug": "aceclofenac",
+      "condition": "peptic_ulcer",
+      "severity": "major",
+      "note": "NSAID contraindicated in active gastrointestinal ulcer or bleeding."
+    },
+    {
+      "drug": "metformin",
+      "condition": "renal_impairment",
+      "severity": "critical",
+      "note": "Risk of fatal lactic acidosis in renal failure; contraindicated in severe renal disease."
+    },
+    {
+      "drug": "diclofenac",
+      "condition": "renal_impairment",
+      "severity": "major",
+      "note": "NSAID reduces renal blood flow and precipitates acute renal decompensation."
+    },
+    {
+      "drug": "pseudoephedrine",
+      "condition": "hypertension",
+      "severity": "moderate",
+      "note": "Sympathomimetic agent may elevate blood pressure and exacerbate hypertension."
+    },
+    {
+      "drug": "prednisolone",
+      "condition": "peptic_ulcer",
+      "severity": "moderate",
+      "note": "Corticosteroids increase risk of peptic ulceration and GI bleeding, especially with NSAIDs."
+    }
+  ],
+  "demographic_rules": [
+    {
+      "drug": "aspirin",
+      "age_max": 12,
+      "severity": "critical",
+      "note": "Contraindicated in children with fever or viral infections due to risk of Reye's syndrome."
+    },
+    {
+      "drug": "ciprofloxacin",
+      "age_max": 12,
+      "severity": "major",
+      "note": "Fluoroquinolone carries risk of arthropathy and cartilage damage in pediatric patients."
+    },
+    {
+      "drug": "alprazolam",
+      "age_min": 65,
+      "severity": "major",
+      "note": "Beers Criteria: Increased sensitivity to benzodiazepines in elderly; high risk of falls, delirium, and cognitive impairment."
+    },
+    {
+      "drug": "diazepam",
+      "age_min": 65,
+      "severity": "major",
+      "note": "Beers Criteria: Long-acting benzodiazepine causes prolonged sedation and marked fall risk in older adults."
+    },
+    {
+      "drug": "tramadol",
+      "age_min": 65,
+      "severity": "major",
+      "note": "Beers Criteria: High risk of delirium, central nervous system depression, and reduced seizure threshold in elderly."
+    },
+    {
+      "drug": "diclofenac",
+      "age_min": 65,
+      "severity": "moderate",
+      "note": "Beers Criteria: Chronic NSAID use in elderly increases risk of GI bleeding and accelerated renal function decline."
+    }
+  ]
+}

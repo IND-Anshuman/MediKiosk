@@ -12,6 +12,7 @@ from .models import (
     SessionState,
     Slot,
     Source,
+    ClinicalSafetyAlert,
     utcnow,
 )
 from .session_store import SessionStore
@@ -30,6 +31,7 @@ __all__ = [
     "SessionState",
     "Slot",
     "Source",
+    "ClinicalSafetyAlert",
     "SessionStore",
     "utcnow",
 ]

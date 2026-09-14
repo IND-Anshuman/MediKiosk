@@ -40,6 +40,8 @@
     {"name": "metoprolol", "synonyms": ["metoprolol", "metolar", "मेटोप्रोलोल"], "common_doses": ["25mg", "50mg"]},
     {"name": "losartan", "synonyms": ["losartan", "losar", "लोसार्टन"], "common_doses": ["25mg", "50mg"]},
     {"name": "hydrochlorothiazide", "synonyms": ["hydrochlorothiazide", "hctz", "हाइड्रोक्लोरोथायाज़ाइड"], "common_doses": ["12.5mg", "25mg"]},
-    {"name": "glyceryl_trinitrate", "synonyms": ["glyceryl trinitrate", "sorbitrate", "nitrocontin", "ग्लिसेरिल ट्राइनाइट्रेट"], "common_doses": ["0.5mg"]}
+    {"name": "glyceryl_trinitrate", "synonyms": ["glyceryl trinitrate", "sorbitrate", "nitrocontin", "ग्लिसेरिल ट्राइनाइट्रेट"], "common_doses": ["0.5mg"]},
+    {"name": "propranolol", "synonyms": ["propranolol", "ciplar", "इंडेरल", "प्रोप्रानालॉल"], "common_doses": ["10mg", "20mg", "40mg"]},
+    {"name": "atenolol", "synonyms": ["atenolol", "aten", "अटेनोलोल"], "common_doses": ["25mg", "50mg"]}
   ]
 }

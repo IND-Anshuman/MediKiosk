@@ -39,7 +39,13 @@
 {% endif %}
 
 ## Allergies
+{% if allergies %}
+{% for a in allergies %}
+- {{ a }}
+{% endfor %}
+{% else %}
 - None reported
+{% endif %}
 
 ## Family/Personal
 - Not elicited in MVP
@@ -57,6 +63,13 @@
 ## RED FLAGS — IMMEDIATE ATTENTION
 {% for rf in red_flags %}
 - ⚠️ {{ rf.message_en }}
+{% endfor %}
+{% endif %}
+
+{% if safety_alerts %}
+## CLINICAL SAFETY ALERTS & CONTRAINDICATIONS
+{% for alert in safety_alerts %}
+- ⚠️ [{{ alert.severity | upper }}] {{ alert.title }}: {{ alert.detail }}
 {% endfor %}
 {% endif %}
 
