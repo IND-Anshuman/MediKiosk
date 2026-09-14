@@ -1,7 +1,7 @@
 "use client";
 
-/** Doctor portal (plan T4.6 v2): queue + summary with slot-citation chips,
- *  timeline (AD-7), abnormal labs + interaction warnings, PDF export. */
+/** Doctor portal (plan T4.6 v2, restyled §1.7): Monitor surface — queue column
+ *  + summary panel with citation chips, timeline hairline, PDF + confirm. */
 import { useEffect, useState } from "react";
 
 interface QueueRow {
@@ -43,58 +43,95 @@ export default function DoctorPortal({ sessionId }: { sessionId?: string }) {
   }, [sessionId]);
 
   return (
-    <main className="mx-auto max-w-4xl p-6">
-      <h2 className="text-2xl font-bold text-slate-900">Doctor Queue</h2>
-      <ul data-testid="doctor-queue" className="mt-3 space-y-2">
-        {queue.map((row) => (
-          <li
-            key={row.session_id}
-            data-testid={`doctor-queue-row-${row.token}`}
-            className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3"
-          >
-            <span className="font-mono text-slate-500">{row.token}</span>
-            <span className="font-semibold text-slate-800">{row.name}</span>
-            <span className="text-slate-500">{row.complaint}</span>
-            {row.red_flag && (
-              <span
-                data-testid="redflag-badge"
-                className="ml-auto rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-700"
-              >
-                ⚠ red flag
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
+    <div className="grid w-full gap-[var(--space-lg)] lg:grid-cols-[240px_1fr]">
+      {/* Queue column — Monitor surface: dense, calm, scannable */}
+      <section aria-label="queue">
+        <h2 className="text-[13px] font-semibold uppercase tracking-[0.06em] text-[var(--ink-2)]">
+          Queue
+        </h2>
+        <ul data-testid="doctor-queue" className="mt-[var(--space-md)] flex flex-col gap-[var(--space-sm)]">
+          {queue.map((row) => (
+            <li
+              key={row.session_id}
+              data-testid={`doctor-queue-row-${row.token}`}
+              className="glass-chip flex min-h-[var(--tap-doctor)] items-center gap-[var(--space-md)] px-[var(--space-md)] py-[var(--space-sm)]"
+            >
+              <span className="font-mono text-[13px] tabular-nums text-[var(--ink-2)]">{row.token}</span>
+              <span className="min-w-0 truncate font-semibold text-[var(--ink)]">{row.name}</span>
+              {row.red_flag && (
+                <span
+                  data-testid="redflag-badge"
+                  className="ml-auto shrink-0 rounded-full px-[var(--space-sm)] py-[2px] text-[12px] font-bold"
+                  style={{ background: "var(--danger-bg)", color: "var(--danger)" }}
+                >
+                  ⚠
+                </span>
+              )}
+            </li>
+          ))}
+          {queue.length === 0 && (
+            <li className="px-[var(--space-md)] py-[var(--space-base)] text-[14px] text-[var(--ink-2)]">
+              कोई patient वर्तमान में नहीं
+            </li>
+          )}
+        </ul>
+      </section>
 
-      {summary && (
-        <section data-testid="doctor-summary" className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold">OPD Summary</h3>
+      {/* Summary panel */}
+      {summary ? (
+        <section data-testid="doctor-summary" className="glass-panel p-[clamp(20px,3vw,32px)]">
+          <div className="flex items-center justify-between gap-[var(--space-md)]">
+            <h3 className="text-xl font-bold text-[var(--ink)]">OPD Summary</h3>
             <a
               data-testid="summary-pdf"
               href={`/api/sessions/${sessionId}/summary.pdf`}
-              className="rounded-lg border border-slate-300 px-3 py-1 text-sm text-slate-700"
+              className="glass-chip flex min-h-[var(--tap-doctor)] items-center px-[var(--space-md)] text-[14px] font-semibold text-[var(--ink)]"
             >
               ⬇ PDF
             </a>
           </div>
-          <pre className="mt-3 whitespace-pre-wrap font-sans text-slate-800">{summary.summary_md}</pre>
+
+          <pre className="mt-[var(--space-base)] whitespace-pre-wrap font-[inherit] text-[15px] leading-7 text-[var(--ink)]">
+            {summary.summary_md}
+          </pre>
 
           {summary.timeline.length > 0 && (
-            <div className="mt-5">
-              <h4 className="font-semibold text-slate-700">Timeline</h4>
-              <ul className="mt-2 space-y-1">
+            <div className="mt-[var(--space-lg)]">
+              <h4 className="text-[13px] font-semibold uppercase tracking-[0.06em] text-[var(--ink-2)]">
+                Timeline
+              </h4>
+              <ul className="mt-[var(--space-md)] flex flex-col">
                 {summary.timeline.map((item, i) => (
                   <li
                     key={i}
                     data-testid={`timeline-item-${i}`}
-                    className="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-slate-700"
+                    className="relative flex items-center gap-[var(--space-md)] py-[var(--space-sm)] pl-[var(--space-lg)]"
+                    style={{ borderLeft: i === 0 ? "none" : undefined }}
                   >
-                    <span className="font-mono text-sm">{item.date ?? "Undated"}</span>
-                    <span>{item.kind}</span>
+                    {/* hairline + dot */}
+                    <span
+                      aria-hidden
+                      className="absolute left-[5px] top-0 h-full w-px"
+                      style={{ background: "var(--line)", display: i === 0 ? "none" : "block" }}
+                    />
+                    <span
+                      aria-hidden
+                      className="absolute left-0 top-1/2 h-[11px] w-[11px] -translate-y-1/2 rounded-full"
+                      style={{
+                        background: item.abnormal.length ? "var(--danger)" : "var(--accent)",
+                      }}
+                    />
+                    <span className="font-mono text-[13px] tabular-nums text-[var(--ink-2)]">
+                      {item.date ?? "Undated"}
+                    </span>
+                    <span className="text-[15px] text-[var(--ink)]">{item.kind}</span>
                     {item.abnormal.map((a) => (
-                      <span key={a} data-testid="abnormal-flag" className="rounded bg-red-100 px-2 text-sm text-red-700">
+                      <span
+                        key={a}
+                        data-testid="abnormal-flag"
+                        className="rounded-full px-[var(--space-sm)] py-[2px] text-[12px] font-bold"
+                        style={{ background: "var(--danger-bg)", color: "var(--danger)" }}
+                      >
                         {a}
                       </span>
                     ))}
@@ -105,12 +142,13 @@ export default function DoctorPortal({ sessionId }: { sessionId?: string }) {
           )}
 
           {summary.interactions.length > 0 && (
-            <div className="mt-4 space-y-2">
+            <div className="mt-[var(--space-lg)] flex flex-col gap-[var(--space-sm)]">
               {summary.interactions.map((x) => (
                 <div
                   key={`${x.a}-${x.b}`}
                   data-testid="interaction-warning"
-                  className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-amber-900"
+                  className="rounded-[var(--radius-chip)] px-[var(--space-md)] py-[var(--space-sm)] text-[14px] font-medium"
+                  style={{ background: "var(--warn-bg)", color: "var(--ink)" }}
                 >
                   ⚠ {x.a} + {x.b}: {x.note} ({x.severity})
                 </div>
@@ -120,7 +158,8 @@ export default function DoctorPortal({ sessionId }: { sessionId?: string }) {
 
           <button
             data-testid="confirm-summary"
-            className="mt-6 w-full rounded-xl bg-green-600 py-3 text-lg font-semibold text-white"
+            className="mt-[var(--space-xl)] min-h-[var(--tap-doctor)] w-full rounded-[var(--radius-chip)] text-[16px] font-bold text-[var(--accent-ink)]"
+            style={{ background: "var(--accent)" }}
             onClick={() =>
               void fetch(API(`/api/sessions/${sessionId}/summary/confirm`), { method: "POST" })
             }
@@ -128,7 +167,11 @@ export default function DoctorPortal({ sessionId }: { sessionId?: string }) {
             ✓ Confirm summary
           </button>
         </section>
+      ) : (
+        <section className="glass-panel flex min-h-[280px] items-center justify-center p-[var(--space-xl)] text-[var(--ink-2)]">
+          किसी patient का summary देखने के लिए queue में चुनें
+        </section>
       )}
-    </main>
+    </div>
   );
 }
