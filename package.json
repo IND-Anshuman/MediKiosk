@@ -2,5 +2,5 @@
   "name": "medikiosk",
   "private": true,
   "packageManager": "pnpm@9.15.9",
-  "workspaces": ["apps/*"]
+  "workspaces": "__REMOVE__"
 }

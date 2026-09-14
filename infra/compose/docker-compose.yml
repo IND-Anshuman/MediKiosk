@@ -55,6 +55,8 @@ services:
       ASR_MODEL: small
       ASR_DEVICE: cpu
       ASR_COMPUTE: int8
+      ASR_BACKEND: ${ASR_BACKEND:-local}
+      SPEECHMATICS_API_KEY: ${SPEECHMATICS_API_KEY:-}
       LANG_BACKEND: ${LANG_BACKEND:-local}
     deploy:
       resources:
@@ -105,7 +107,10 @@ services:
       dockerfile: infra/docker/Dockerfile.ocr
     ports: ["8004:8004"]
     environment:
-      OCR_BACKEND: ${OCR_BACKEND:-stub}
+      OCR_BACKEND: ${OCR_BACKEND:-paddle}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8004/healthz"]
       interval: 5s

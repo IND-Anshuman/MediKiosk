@@ -61,7 +61,7 @@ except the optional LLM API key.
 | `asr` | 8001 | speech → text (faster-whisper / Bhashini) |
 | `tts` | 8002 | text → speech (pre-baked + edge-tts / Bhashini) |
 | `dialogue` | 8003 | conversational history engine |
-| `ocr` | 8004 | printed text extraction (PaddleOCR) |
+| `ocr` | 8004 | printed text extraction (vision-LLM or PaddleOCR) |
 | `ner` | 8005 | clinical entity extraction (rule-based) |
 | `docintel` | 8006 | document pipeline: timeline, interactions, ref-ranges |
 | `summarizer` | 8007 | structured summary + PDF |
@@ -141,6 +141,36 @@ extractor — great for a rehearsed demo with no network/credential risk.
 pre-baked edge-tts audio — no key needed. `LANG_BACKEND=bhashini` unlocks 22
 Indian languages via ULCA/Bhashini (key + pipeline ids from
 https://ulca.bhashini.gov.in).
+
+### ASR / OCR — choose your backend by resource
+
+Every AI service can run **local** (self-hosted, offline) or **on an external
+API** (no model, lean container, but needs a key + network). Pick per your
+resources — this is designed so people with different setups use the same repo.
+
+**ASR** (`ASR_BACKEND`):
+
+| Backend | How | Model on disk | Key |
+|---|---|---|---|
+| `local` (default) | faster-whisper on CPU | ~460 MB (downloaded at runtime) | none |
+| `speechmatics` | Speechmatics REST API | none — lean | `SPEECHMATICS_API_KEY` |
+| `bhashini` | ULCA national ASR | none | `BHASHINI_ULCA_API_KEY` |
+
+**OCR** (`OCR_BACKEND`):
+
+| Backend | How | Model on disk | Key |
+|---|---|---|---|
+| `vision` (**recommended**) | vision-LLM via OpenAI-compatible API (Featherless/OpenAI) | none — leanest | `OPENAI_API_KEY` + `OPENAI_BASE_URL` + a vision-capable `OPENAI_MODEL` |
+| `paddle` | local PaddleOCR | ~1 GB (Linux/Docker) | none |
+
+**LLM** (`LLM_BACKEND`): see table above — `stub` (offline) or `openai`
+(any provider incl. Featherless).
+
+> **Why this matters for size:** with `speechmatics` + `vision` + an external
+> LLM, **no heavy model ships in any container** — the whole deployment is the
+> Python venv + your app code (~a few hundred MB), not GBs of models. Local
+> backends are there for people who want zero external calls (e.g. an offline
+> demo) at the cost of model weight and a Linux/Docker host.
 
 ### National-health integrations (all optional, graceful fallbacks)
 

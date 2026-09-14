@@ -10,4 +10,4 @@ COPY packages packages
 COPY services services
 RUN pip install --no-cache-dir uv && uv sync --frozen --no-dev
 EXPOSE 8004
-CMD [uv, run, uvicorn, medikiosk_ocr.main:app, --host, 0.0.0.0, --port, 8004]
+CMD ["uv", "run", "uvicorn", "medikiosk_ocr.main:app", "--host", "0.0.0.0", "--port", "8004"]

@@ -1,0 +1,48 @@
+# Exclude heavyweight local artifacts from the Docker build context.
+# The context was 793MB because .venv + node_modules + .next were sent to the
+# daemon on every build. None are needed to build an image.
+
+# VCS
+.git/
+.gitignore
+.dockerignore
+
+# Python
+.venv/
+**/__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / web
+node_modules/
+**/node_modules/
+**/.next/
+**/out/
+dist/
+apps/web/.next/
+
+# Secrets & local env
+.env
+*.local
+
+# Data / models (downloaded at runtime, not baked in)
+data/fhir-outbox/
+models/
+*.gguf
+
+# Artifacts
+*.log
+tests/fixtures/audio/*.wav
+tests/fixtures/images/*
+!tests/fixtures/audio/.gitkeep
+!tests/fixtures/images/.gitkeep
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+.DS_Store

@@ -79,6 +79,11 @@ def _sigmoid(x: float) -> float:
 
 
 def _backend() -> str:
+    # ASR backend: explicit ASR_BACKEND wins (speechmatics|local), else legacy
+    # LANG_BACKEND=bhashini mapping, else local faster-whisper.
+    explicit = os.getenv("ASR_BACKEND", "")
+    if explicit:
+        return explicit
     return os.getenv("LANG_BACKEND", "local")
 
 
@@ -89,6 +94,12 @@ async def transcribe(audio: UploadFile = File(...)):
     data = await audio.read()
     if not data:
         raise HTTPException(422, "empty audio")
+    # Backend order: explicit ASR_BACKEND wins; LANG_BACKEND=bhashini is legacy.
+    backend = os.getenv("ASR_BACKEND", _backend())
+    if backend == "speechmatics":
+        from medikiosk_asr.speechmatics_backend import transcribe as sm_transcribe
+        text, lang = sm_transcribe(data)
+        return {"text": text, "language": lang, "confidence": 1.0, "needs_confirmation": False}
     if _backend() == "bhashini":
         from medikiosk_asr.bhashini_backend import transcribe as bh_transcribe
         text, lang = bh_transcribe(data)

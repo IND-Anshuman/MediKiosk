@@ -11,6 +11,8 @@ serves /healthz on Windows; POST /ocr answers 503 with a clear message.
 
 from __future__ import annotations
 
+import os
+
 from fastapi import FastAPI, File, HTTPException, UploadFile
 
 app = FastAPI(title="MediKiosk OCR", version="0.1.0")
@@ -24,17 +26,21 @@ def healthz():
 
 
 def _ocr_bytes(data: bytes, lang: str = "en") -> tuple[str, int]:
-    """OCR image bytes → (text, page_count).
+    """OCR image bytes → (text, page_count)."""
+    backend = os.getenv("OCR_BACKEND", "paddle").lower()
+    if backend in ("vision", "llm", "featherless", "openai"):
+        from medikiosk_ocr.vision_ocr import ocr_bytes as vision_ocr
+        return vision_ocr(data)
 
-    Raises HTTPException(503) when paddleocr is unavailable (Windows dev).
-    """
+    # local PaddleOCR — Linux/Docker only; graceful 503 on Windows dev.
     try:
         from paddleocr import PaddleOCR  # noqa: lazy — Docker-only dep
     except ImportError as e:
         raise HTTPException(
             503,
             "OCR engine unavailable: paddleocr is not installed "
-            "(Linux/Docker only in this setup; run the service in its container).",
+            "(Linux/Docker only in this setup; run the service in its container, "
+            "or set OCR_BACKEND=vision for API-only OCR).",
         ) from e
 
     ocr = PaddleOCR(use_angle_cls=True, lang=lang, show_log=False)

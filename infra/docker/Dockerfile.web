@@ -1,14 +1,14 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
-# context = repo root; pnpm workspace root resolves apps/web
-COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
-RUN corepack enable && pnpm install --frozen-lockfile
+# pnpm workspace root — must see apps/web BEFORE install so web's deps get resolved
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
 COPY apps/web ./apps/web
+RUN corepack enable && pnpm install --frozen-lockfile
+# Next 16 monorepo standalone nests at apps/web/.next/standalone/apps/web
 RUN pnpm --dir apps/web build
 
 FROM node:20-alpine
 WORKDIR /app
-# Next 16 monorepo standalone nests at apps/web/.next/standalone/apps/web
 COPY --from=builder /app/apps/web/.next/standalone/apps/web ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder /app/apps/web/public ./apps/web/public

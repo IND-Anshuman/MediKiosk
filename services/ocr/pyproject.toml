@@ -7,12 +7,14 @@ dependencies = [
     "fastapi>=0.111",
     "uvicorn[standard]>=0.30",
     "python-multipart>=0.0.32",
+    "openai>=3.8.0",  # vision backend (OCR_BACKEND=vision) — lean, no local model
 ]
 
-# NOTE: paddleocr/pytesseract are deliberately NOT declared here — they are
-# Linux-only in this setup and are installed in the Docker image (later phase).
-# The engine is imported lazily inside _ocr_bytes so this service still
-# imports/starts on Windows for tests.
+# PaddleOCR (OCR_BACKEND=paddle) is intentionally NOT declared below — it is
+# Linux-only and heavy (~1GB). The vision backend runs OCR via an
+# OpenAI-compatible vision model (Featherless/OpenAI) with NO local model, so
+# the container stays lean. The paddle engine is imported lazily inside
+# _ocr_bytes; set OCR_BACKEND=vision (recommended) for API-only operation.
 
 [build-system]
 requires = ["hatchling"]
