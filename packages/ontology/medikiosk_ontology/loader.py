@@ -53,8 +53,9 @@ def _matches(expected: str | list[str], actual: Any) -> bool:
 
 
 class Ontology(BaseModel):
-    chief_complaints: dict[str, ChiefComplaintDef]
-    red_flags: list[RedFlag]
+    chief_complaints: dict[str, ChiefComplaintDef] = Field(default_factory=dict)
+    red_flags: list[RedFlag] = Field(default_factory=list)
+    idioms: dict[str, dict[str, str]] = Field(default_factory=dict)
 
     def match_red_flag(self, *, chief_complaint: str, slots: dict[str, Any]) -> RedFlag | None:
         for rf in self.red_flags:
@@ -62,6 +63,16 @@ class Ontology(BaseModel):
                 continue
             if all(_matches(v, slots.get(k)) for k, v in rf.match_slots.items()):
                 return rf
+        return None
+
+    def normalize_idiom(self, phrase: str) -> dict[str, str] | None:
+        """Map vernacular Indian folk phrase to canonical clinical term."""
+        if not phrase or not isinstance(phrase, str):
+            return None
+        p = phrase.lower().strip()
+        for idiom_phrase, info in self.idioms.items():
+            if idiom_phrase in p or p in idiom_phrase:
+                return info
         return None
 
 

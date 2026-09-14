@@ -202,3 +202,22 @@ def test_process_undated_keeps_none_and_sorts_first(c):
     # timeline over [this doc] trivially puts the undated doc first
     tl = build_timeline([DocumentRecord.model_validate(body)])
     assert [lbl for _, lbl in tl] == ["Undated"]
+
+
+def test_process_with_safety_alerts_and_allergies(c):
+    r = c.post(
+        "/process",
+        json={
+            "doc_id": "doc-4",
+            "text": "Rx\nTab Amoxicillin 500mg TDS\nTab Propranolol 40mg BD",
+            "allergies": ["penicillin"],
+            "conditions": ["asthma"],
+            "age": 45,
+        },
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert "safety_alerts" in body
+    alerts = body["safety_alerts"]
+    assert any(a["category"] == "allergy" and "amoxicillin" in a["title"].lower() for a in alerts)
+    assert any(a["category"] == "contraindication" and "propranolol" in a["title"].lower() for a in alerts)

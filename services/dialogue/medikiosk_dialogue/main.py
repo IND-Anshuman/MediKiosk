@@ -131,7 +131,11 @@ class DialogueEngine:
             choice = extracted.get("choice")
             # snap free-text to a known option when unambiguous (echo-safe)
             if isinstance(choice, str) and choice not in (q.touch_options_en + q.touch_options_hi):
-                choice = _fuzzy_snap(choice, q)
+                choice = _fuzzy_snap(choice, q, self.ontology)
+            if choice is None and text:
+                idiom = self.ontology.normalize_idiom(text)
+                if idiom:
+                    choice = _fuzzy_snap(idiom.get("canonical", text), q, self.ontology)
             parsed = choice if choice is not None else text
             source, confidence = Source.VOICE, (asr_confidence if asr_confidence is not None else 0.9)
 
@@ -213,12 +217,21 @@ def defn_questions_options(defn, q: Question, language: str) -> list[str]:
     return opts if opts else q.touch_options_en
 
 
-def _fuzzy_snap(choice: str, q: Question) -> str:
-    """Snap LLM output to a known touch option (en or hi) by substring."""
+def _fuzzy_snap(choice: str, q: Question, ontology: Ontology | None = None) -> str:
+    """Snap LLM output to a known touch option (en or hi) by substring or idiom mapping."""
     low = choice.lower()
     for opt in q.touch_options_en + q.touch_options_hi:
         if low in opt.lower() or opt.lower() in low:
             return opt
+    if ontology:
+        idiom = ontology.normalize_idiom(choice)
+        if idiom:
+            canon = idiom.get("canonical", "").lower()
+            trans = idiom.get("english_translation", "").lower()
+            for opt in q.touch_options_en + q.touch_options_hi:
+                ol = opt.lower()
+                if (ol and (ol in canon or canon in ol or ol in trans or trans in ol)):
+                    return opt
     return choice
 
 

@@ -121,6 +121,31 @@ class Summarizer:
 
         past_lines = self._past_medical_lines(session)
 
+        allergies = list(session.patient.allergies if session.patient else [])
+        safety_alerts = list(session.safety_alerts)
+
+        # Lazy safety evaluation if session.safety_alerts not pre-populated
+        if not safety_alerts:
+            try:
+                from medikiosk_docintel.intel import evaluate_clinical_safety
+                all_meds = [m for doc in session.documents for m in doc.meds]
+                conditions = list(session.secondary_complaints)
+                if cc:
+                    conditions.append(cc.name)
+                if session.patient and session.patient.past_conditions:
+                    conditions.extend(session.patient.past_conditions)
+                age = session.patient.age if session.patient else None
+                sex = session.patient.gender if session.patient else None
+                safety_alerts = evaluate_clinical_safety(
+                    meds=all_meds,
+                    conditions=conditions,
+                    allergies=allergies,
+                    age=age,
+                    sex=sex,
+                )
+            except Exception:
+                pass
+
         return self._template.render(
             chief_complaint=cc.name if cc else "—",
             framework=cc.framework if cc else "",
@@ -129,7 +154,9 @@ class Summarizer:
             past_lines=past_lines,
             meds_lines=meds_lines,
             labs_lines=labs_lines,
+            allergies=allergies,
             red_flags=session.red_flags,
+            safety_alerts=safety_alerts,
         )
 
     # -- internals -------------------------------------------------------------

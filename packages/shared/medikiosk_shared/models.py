@@ -86,6 +86,8 @@ class Patient(BaseModel):
     gender: Literal["male", "female", "other"] | None = None
     language: str = "hi"
     phone: str | None = None
+    allergies: list[str] = []
+    past_conditions: list[str] = []
 
     @property
     def abha_id(self) -> str | None:
@@ -100,6 +102,14 @@ class RedFlagAlert(BaseModel):
     urgency: Literal["immediate", "urgent", "standard"]
     message_hi: str
     message_en: str
+
+
+class ClinicalSafetyAlert(BaseModel):
+    category: Literal["allergy", "contraindication", "demographic", "interaction"]
+    severity: Literal["critical", "major", "moderate", "advisory"]
+    title: str
+    detail: str
+    source_entities: list[str] = []
 
 
 class ConsentArtifact(BaseModel):
@@ -146,6 +156,7 @@ class SessionState(BaseModel):
     secondary_complaints: list[str] = []
     answers: list[Answer] = []
     red_flags: list[RedFlagAlert] = []
+    safety_alerts: list[ClinicalSafetyAlert] = []
     consent: ConsentArtifact | None = None
     documents: list[DocumentRecord] = []
     summary_md: str | None = None

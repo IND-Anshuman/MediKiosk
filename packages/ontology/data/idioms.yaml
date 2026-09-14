@@ -1,0 +1,43 @@
+﻿# Regional symptom vernacular idiom mapping (ROADMAP-INDIA §0.2)
+# Maps folk / colloquial expressions to canonical clinical slot values and symptom definitions.
+idioms:
+  "garami badh gayi":
+    symptom: "fever"
+    canonical: "Fever / Pyrexia"
+    english_translation: "Feverish feeling / heat increased"
+  "sharir jal raha hai":
+    symptom: "fever"
+    canonical: "High fever / Severe burning sensation"
+    english_translation: "Body burning / high fever"
+  "pet mein keede":
+    symptom: "abdominal_pain"
+    canonical: "Intestinal parasitic infestation / Abdominal cramping"
+    english_translation: "Worms in stomach / abdominal colic"
+  "safed pani":
+    symptom: "gynecological"
+    canonical: "Leukorrhea / Vaginal discharge"
+    english_translation: "White vaginal discharge"
+  "khoon ka daura":
+    symptom: "chest_pain"
+    canonical: "Paroxysmal chest episode / Angina"
+    english_translation: "Circulatory paroxysm / chest episode"
+  "chakkar aa raha hai":
+    symptom: "headache"
+    canonical: "Vertigo / Postural dizziness"
+    english_translation: "Dizziness / Vertigo"
+  "seene mein jalan":
+    symptom: "chest_pain"
+    canonical: "Retrosternal heartburn / Pyrosis"
+    english_translation: "Chest heartburn"
+  "sans phoolna":
+    symptom: "cough"
+    canonical: "Dyspnea / Breathlessness on exertion"
+    english_translation: "Shortness of breath"
+  "khansi mein balgam":
+    symptom: "cough"
+    canonical: "Productive cough / Sputum production"
+    english_translation: "Cough with phlegm"
+  "sar ghoom raha hai":
+    symptom: "headache"
+    canonical: "Lightheadedness / Cephalea with vertigo"
+    english_translation: "Head spinning / lightheadedness"
