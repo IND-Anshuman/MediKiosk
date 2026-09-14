@@ -1,0 +1,89 @@
+/* Strata — the one ambient depth scene (plan §1.4).
+ * Three translucent color planes drifting at different rates behind all UI.
+ * Transform-only animation (GPU-composited), reduced-motion gated.
+ * Pointer tilt (±2°) applied via .strata-tilt by useTiltParallax. */
+
+.strata {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* static light source so glass has a consistent highlight direction */
+  background: radial-gradient(
+    120% 90% at 18% 0%,
+    oklch(1 0 0 / 0.5) 0%,
+    transparent 55%
+  );
+}
+
+.strata i {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  filter: blur(2px);
+}
+
+.strata i:nth-child(1) {
+  width: 130vmax;
+  height: 130vmax;
+  top: -55vmax;
+  left: -35vmax;
+  background: radial-gradient(
+    circle,
+    oklch(0.55 0.11 210 / 0.10) 0%,
+    transparent 62%
+  );
+  animation: strata-drift-a 90s var(--ease-out) infinite alternate;
+}
+
+.strata i:nth-child(2) {
+  width: 110vmax;
+  height: 110vmax;
+  top: 20vmax;
+  right: -45vmax;
+  background: radial-gradient(
+    circle,
+    oklch(0.72 0.13 75 / 0.07) 0%,
+    transparent 60%
+  );
+  animation: strata-drift-b 72s var(--ease-out) infinite alternate;
+}
+
+.strata i:nth-child(3) {
+  width: 95vmax;
+  height: 95vmax;
+  bottom: -50vmax;
+  left: 15vmax;
+  background: radial-gradient(
+    circle,
+    oklch(0.58 0.12 155 / 0.07) 0%,
+    transparent 58%
+  );
+  animation: strata-drift-c 104s var(--ease-out) infinite alternate;
+}
+
+@keyframes strata-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(6vmax, 4vmax, 0) scale(1.06); }
+}
+@keyframes strata-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-7vmax, -5vmax, 0) scale(1.04); }
+}
+@keyframes strata-drift-c {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(5vmax, -6vmax, 0) scale(1.05); }
+}
+
+/* Pointer tilt — JS sets --tilt-x/--tilt-y (±2deg max). */
+.strata-tilt {
+  transform: perspective(1200px) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+  transition: transform 120ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strata i { animation: none; }
+  .strata-tilt { transform: none; transition: none; }
+}
