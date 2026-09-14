@@ -1,6 +1,6 @@
 "use client";
 
-/** Documents capture UI (plan T4.5): camera/file upload, per-doc status chips. */
+/** Documents capture (plan §1.7): dashed drop-zone + T2 status-chip rows. */
 import { useCallback, useState } from "react";
 import { t } from "@/lib/i18n";
 
@@ -38,16 +38,24 @@ export default function DocumentsView({ sessionId }: { sessionId: string }) {
   );
 
   return (
-    <main className="mx-auto max-w-xl p-6">
-      <h2 className="text-2xl font-bold text-slate-900">{t("documents_scan")}</h2>
+    <div className="flex w-full flex-col gap-[var(--space-lg)]">
+      <h2
+        className="font-bold text-[var(--ink)]"
+        style={{ fontSize: "clamp(24px, 3.4vw, 30px)", letterSpacing: "-0.02em" }}
+      >
+        {t("documents_scan")}
+      </h2>
+
       <label
         htmlFor="doc-input"
-        className="mt-4 flex min-h-[8rem] cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 bg-white text-slate-600"
+        className="glass-panel flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-[var(--space-sm)] text-[var(--ink-2)] transition-colors hover:border-[var(--accent)]"
+        style={{ borderStyle: "dashed" }}
       >
-        <span className="text-4xl" aria-hidden>
+        <span className="text-[44px] leading-none" aria-hidden>
           📄
         </span>
-        <span className="text-lg">{t("documents_scan")}</span>
+        <span className="text-lg font-semibold text-[var(--ink)]">{t("documents_scan")}</span>
+        <span className="text-[13px]">दस्तावेज़ की फोटो लें या अपलोड करें</span>
         <input
           id="doc-input"
           data-testid="doc-upload"
@@ -59,25 +67,29 @@ export default function DocumentsView({ sessionId }: { sessionId: string }) {
           onChange={(e) => void upload(e.target.files)}
         />
       </label>
-      <ul className="mt-4 space-y-2">
+
+      <ul className="flex flex-col gap-[var(--space-md)]">
         {docs.map((d) => (
           <li
             key={d.doc_id}
             data-testid="doc-item"
-            className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3"
+            className="glass-chip flex items-center justify-between px-[var(--space-base)] py-[var(--space-md)]"
           >
-            <span className="text-slate-800">{d.name}</span>
+            <span className="min-w-0 truncate font-medium text-[var(--ink)]">{d.name}</span>
             <span
               data-testid="doc-status"
-              className={`rounded-full px-3 py-1 text-sm ${
-                d.status === "done" ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
-              }`}
+              className="ml-[var(--space-md)] shrink-0 rounded-full px-[var(--space-md)] py-[var(--space-xs)] text-[13px] font-semibold"
+              style={
+                d.status === "done"
+                  ? { background: "var(--accent-soft)", color: "var(--ok)" }
+                  : { background: "var(--warn-bg)", color: "var(--ink-2)" }
+              }
             >
               {d.status === "done" ? "✓" : "⏳"} {d.status}
             </span>
           </li>
         ))}
       </ul>
-    </main>
+    </div>
   );
 }

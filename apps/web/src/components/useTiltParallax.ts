@@ -19,8 +19,8 @@ export default function useTiltParallax() {
     const onMove = (e: PointerEvent) => {
       const nx = e.clientX / window.innerWidth - 0.5;
       const ny = e.clientY / window.innerHeight - 0.5;
-      ty = (nx * 4).toFixed(2); // ±2deg
-      tx = (-ny * 2.4).toFixed(2);
+      ty = Number((nx * 4).toFixed(2)); // ±2deg
+      tx = Number((-ny * 2.4).toFixed(2));
       if (!raf) {
         raf = requestAnimationFrame(() => {
           el.style.setProperty("--tilt-y", `${ty}deg`);

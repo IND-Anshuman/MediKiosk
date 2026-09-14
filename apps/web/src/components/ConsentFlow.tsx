@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { t } from "@/lib/i18n";
 
+/** Consent (plan §1.7): single glass panel, big paired actions, revoke always
+ *  visible. Copy strips internal jargon (patient says "खाता", not "ABHA"). */
 const SCOPES = ["his_share", "storage"];
 
 export default function ConsentFlow({
@@ -43,48 +45,66 @@ export default function ConsentFlow({
   };
 
   return (
-    <main className="mx-auto max-w-xl p-6">
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-lg text-slate-800">{t("consent_intro")}</p>
-        <ul className="mt-4 space-y-3 text-slate-700">
-          <li className="flex gap-3">
-            <span aria-hidden>🩺</span>
-            <span>{t("consent_his")}</span>
-          </li>
-          <li className="flex gap-3">
-            <span aria-hidden>🔐</span>
-            <span>{t("consent_abha")}</span>
-          </li>
-          <li className="flex gap-3">
-            <span aria-hidden>📄</span>
-            <span>{t("consent_storage")}</span>
-          </li>
-        </ul>
-        <div className="mt-6 space-y-3">
-          {!granted && (
-            <button
-              data-testid="consent-agree"
-              disabled={busy}
-              onClick={agree}
-              className="w-full rounded-xl bg-blue-600 py-4 text-xl font-semibold text-white disabled:opacity-50"
-            >
-              ✓ {t("confirm_yes")}
-            </button>
-          )}
-          {granted && (
-            <p className="rounded-lg bg-green-50 p-3 text-green-800">✓ {t("record_complete")}</p>
-          )}
-          <button
-            data-testid="revoke-btn"
-            disabled={busy || !granted}
-            onClick={revoke}
-            title={granted ? t("revoke_consent") : undefined}
-            className="w-full rounded-xl border border-red-300 py-3 text-red-700 disabled:opacity-40"
+    <section
+      className="glass-panel mx-auto w-full p-[clamp(20px,4vw,40px)]"
+      data-animate="stage-in"
+    >
+      <p
+        className="font-semibold text-[var(--ink)]"
+        style={{ fontSize: "clamp(20px, 2.6vw, 24px)", lineHeight: 1.45, textWrap: "balance" }}
+      >
+        {t("consent_intro")}
+      </p>
+
+      <ul className="mt-[var(--space-lg)] flex flex-col gap-[var(--space-md)]">
+        {[
+          ["🩺", t("consent_his")],
+          ["🔐", t("consent_abha")],
+          ["📄", t("consent_storage")],
+        ].map(([icon, text]) => (
+          <li
+            key={text}
+            className="glass-chip flex items-start gap-[var(--space-md)] px-[var(--space-base)] py-[var(--space-md)] text-[var(--ink)]"
           >
-            {t("revoke_consent")}
+            <span aria-hidden className="text-xl leading-6">
+              {icon}
+            </span>
+            <span className="text-[16px] leading-7">{text}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-[var(--space-xl)] flex flex-col gap-[var(--space-md)]">
+        {!granted && (
+          <button
+            data-testid="consent-agree"
+            disabled={busy}
+            onClick={agree}
+            className="min-h-[var(--tap-min)] w-full rounded-[var(--radius-chip)] py-[var(--space-md)] text-xl font-bold text-[var(--accent-ink)] transition-opacity disabled:opacity-50"
+            style={{ background: "var(--accent)" }}
+          >
+            ✓ {t("confirm_yes")}
           </button>
-        </div>
-      </section>
-    </main>
+        )}
+        {granted && (
+          <p
+            className="rounded-[var(--radius-chip)] p-[var(--space-md)] font-semibold"
+            style={{ background: "var(--accent-soft)", color: "var(--ok)" }}
+          >
+            ✓ {t("record_complete")}
+          </p>
+        )}
+        <button
+          data-testid="revoke-btn"
+          disabled={busy || !granted}
+          onClick={revoke}
+          title={granted ? t("revoke_consent") : undefined}
+          className="min-h-[var(--tap-patient)] w-full rounded-[var(--radius-chip)] border py-[var(--space-md)] text-lg font-semibold transition-colors disabled:opacity-40"
+          style={{ borderColor: "var(--line)", color: "var(--danger)" }}
+        >
+          {t("revoke_consent")}
+        </button>
+      </div>
+    </section>
   );
 }

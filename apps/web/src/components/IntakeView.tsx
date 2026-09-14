@@ -42,21 +42,36 @@ const COMPLAINTS = [
 
 export function ComplaintPicker({ onSelect }: { onSelect: (cc: string) => void }) {
   return (
-    <main className="mx-auto grid max-w-3xl grid-cols-2 gap-5 p-6 md:grid-cols-3">
-      {COMPLAINTS.map(([key, icon, label]) => (
-        <button
-          key={key}
-          data-testid={`cc-${key}`}
-          onClick={() => onSelect(key)}
-          className="flex min-h-[9rem] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-slate-200 bg-white p-4 text-xl font-semibold text-slate-800 shadow-sm active:bg-blue-50"
-        >
-          <span className="text-4xl" aria-hidden>
-            {icon}
-          </span>
-          {key === "ayurvedic_assessment" ? "आयुर्वेद" : key === "chest_pain" ? "सीने में दर्द" : label_hi(key)}
-        </button>
-      ))}
-    </main>
+    <div className="grid w-full grid-cols-2 gap-[var(--space-lg)] md:grid-cols-3">
+      {COMPLAINTS.map(([key, icon, label]) => {
+        const isAyush = key === "ayurvedic_assessment";
+        return (
+          <button
+            key={key}
+            data-testid={`cc-${key}`}
+            data-variant={isAyush ? "ayush" : "allopathic"}
+            onClick={() => onSelect(key)}
+            className="glass-panel flex min-h-[96px] flex-col items-center justify-center gap-[var(--space-sm)] p-[var(--space-base)] font-semibold text-[var(--ink)] transition-colors hover:border-[var(--accent)]"
+            style={isAyush ? { background: "var(--warn-bg)" } : undefined}
+          >
+            <span className="text-[40px] leading-none" aria-hidden>
+              {icon}
+            </span>
+            <span className="text-[19px] leading-snug">
+              {key === "ayurvedic_assessment" ? "आयुर्वेद" : key === "chest_pain" ? "सीने में दर्द" : label_hi(key)}
+            </span>
+            {isAyush && (
+              <span
+                className="rounded-full px-[var(--space-sm)] py-[2px] text-[11px] font-semibold"
+                style={{ background: "var(--warn-bg)", color: "var(--ink-2)" }}
+              >
+                आयुर्वेदिक मूल्यांकन
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -208,35 +223,64 @@ export default function IntakePageInner({
 
   if (redFlag) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-red-700 p-8 text-center text-white">
-        <div data-testid="redflag-banner" className="text-3xl font-bold">
-          ⚠️ {lang === "hi" ? redFlag.message_hi : redFlag.message_en}
+      <main
+        role="alert"
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-[var(--space-xl)] p-[var(--space-xl)] text-center"
+        style={{ background: "var(--danger-bg)" }}
+      >
+        <div
+          data-testid="redflag-banner"
+          className="max-w-[640px] font-bold text-[var(--danger)]"
+          style={{ fontSize: "clamp(26px, 4vw, 36px)", lineHeight: 1.3, textWrap: "balance" }}
+        >
+          <span
+            aria-hidden
+            className="mb-[var(--space-lg)] inline-flex h-16 w-16 items-center justify-center rounded-full text-3xl"
+            style={{
+              background: "var(--danger)",
+              color: "var(--accent-ink)",
+              animation: "redflag-pulse 2s ease-out 3",
+            }}
+          >
+            ⚠
+          </span>
+          <br />
+          {lang === "hi" ? redFlag.message_hi : redFlag.message_en}
         </div>
         {nurseCalled ? (
-          <p className="text-2xl">{t("nurse_called")}</p>
+          <p className="text-2xl font-semibold text-[var(--ink)]">{t("nurse_called")}</p>
         ) : (
           <button
             data-testid="nurse-call"
             onClick={callNurse}
-            className="rounded-2xl bg-white px-10 py-6 text-2xl font-bold text-red-700"
+            className="min-h-[88px] rounded-[var(--radius-panel)] px-[var(--space-2xl)] text-2xl font-bold text-[var(--accent-ink)]"
+            style={{ background: "var(--danger)" }}
           >
             🚑 {t("priority_alert_call_nurse")}
           </button>
         )}
+        <style>{`@keyframes redflag-pulse { 0%{box-shadow:0 0 0 0 oklch(0.52 0.19 25/0.45)} 100%{box-shadow:0 0 0 28px oklch(0.52 0.19 25/0)} }`}</style>
       </main>
     );
   }
 
   if (done) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-8 text-center">
-        <div data-testid="interview-done" className="text-2xl font-semibold text-slate-800">
+      <main className="flex flex-1 flex-col items-center justify-center gap-[var(--space-lg)] text-center">
+        <div data-testid="interview-done" className="text-xl text-[var(--ink-2)]">
           {t("record_complete")}
         </div>
-        <div data-testid="summary-ready" className="text-3xl font-bold text-green-700">
+        <div
+          data-testid="summary-ready"
+          className="font-bold text-[var(--ink)]"
+          style={{ fontSize: "clamp(26px, 4vw, 34px)", textWrap: "balance" }}
+        >
           {t("summary_ready")}
         </div>
-        <button className="rounded-xl bg-blue-600 px-8 py-4 text-xl font-semibold text-white">
+        <button
+          className="min-h-[var(--tap-min)] rounded-[var(--radius-chip)] px-[var(--space-2xl)] text-xl font-bold text-[var(--accent-ink)]"
+          style={{ background: "var(--accent)" }}
+        >
           {t("go_to_room")}
         </button>
       </main>
@@ -245,36 +289,39 @@ export default function IntakePageInner({
 
   if (confirm) {
     return (
-      <main className="mx-auto max-w-xl p-6 text-center">
-        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-6">
-          <p className="text-xl text-slate-800">
-            {t("confirm_heard")} <strong>“{confirm.heard}”</strong>
-          </p>
-          <div className="mt-6 flex justify-center gap-4">
-            <button
-              data-testid="confirm-yes"
-              onClick={() => confirmAnswer(true)}
-              className="rounded-xl bg-green-600 px-8 py-4 text-xl font-semibold text-white"
-            >
-              {t("confirm_yes")}
-            </button>
-            <button
-              data-testid="confirm-no"
-              onClick={() => confirmAnswer(false)}
-              className="rounded-xl border border-slate-400 px-8 py-4 text-xl font-semibold text-slate-700"
-            >
-              {t("confirm_no")}
-            </button>
-          </div>
+      <section
+        className="glass-panel mx-auto w-full p-[clamp(20px,4vw,40px)] text-center"
+        data-animate="stage-in"
+      >
+        <p className="text-xl text-[var(--ink)]">
+          {t("confirm_heard")}{" "}
+          <strong className="text-[22px]">“{confirm.heard}”</strong>
+        </p>
+        <div className="mt-[var(--space-xl)] flex flex-col gap-[var(--space-md)] sm:flex-row sm:justify-center">
+          <button
+            data-testid="confirm-yes"
+            onClick={() => confirmAnswer(true)}
+            className="min-h-[var(--tap-min)] rounded-[var(--radius-chip)] px-[var(--space-xl)] text-lg font-bold text-[var(--accent-ink)]"
+            style={{ background: "var(--ok)" }}
+          >
+            {t("confirm_yes")}
+          </button>
+          <button
+            data-testid="confirm-no"
+            onClick={() => confirmAnswer(false)}
+            className="glass-chip min-h-[var(--tap-min)] px-[var(--space-xl)] text-lg font-bold text-[var(--ink)]"
+          >
+            {t("confirm_no")}
+          </button>
         </div>
-      </main>
+      </section>
     );
   }
 
   if (!question) {
     return (
-      <main className="flex min-h-screen items-center justify-center p-6">
-        <div className="text-xl text-slate-500">{t("processing")}</div>
+      <main className="flex flex-1 items-center justify-center">
+        <div className="text-lg text-[var(--ink-2)]">{t("processing")}</div>
       </main>
     );
   }
@@ -283,59 +330,81 @@ export default function IntakePageInner({
   const isMulti = question.type === "multi_choice";
 
   return (
-    <main className="mx-auto max-w-2xl p-6">
-      <div className="mb-2 text-sm text-slate-500" data-testid="question-progress">
-        {progress}
-      </div>
-      <section data-testid="question-card" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-2xl font-semibold text-slate-900">
-          {lang === "hi" ? question.voice_hi : question.voice_en}
-        </h2>
+    <section
+      className="glass-panel mx-auto w-full p-[clamp(20px,4vw,40px)]"
+      data-testid="question-card"
+      data-animate="stage-in"
+    >
+      <div className="mb-[var(--space-sm)] flex items-center justify-between">
+        <span className="text-[13px] font-medium tabular-nums text-[var(--ink-2)]" data-testid="question-progress">
+          {progress}
+        </span>
         {replay?.enabled && (
-          <span data-testid="replay-indicator" className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700">
+          <span
+            data-testid="replay-indicator"
+            className="glass-chip px-[var(--space-sm)] py-[2px] text-[11px] font-semibold text-[var(--ink-2)]"
+          >
             replay
           </span>
         )}
-        <div className="mt-5 grid gap-3">
-          {opts.map((o, i) => (
+      </div>
+
+      <h2
+        className="font-bold text-[var(--ink)]"
+        style={{ fontSize: "clamp(24px, 3.4vw, 30px)", lineHeight: 1.3, letterSpacing: "-0.02em", textWrap: "balance" }}
+      >
+        {lang === "hi" ? question.voice_hi : question.voice_en}
+      </h2>
+
+      <div className="mt-[var(--space-xl)] grid gap-[var(--space-md)]">
+        {opts.map((o, i) => {
+          const sel = selected.includes(i);
+          return (
             <button
               key={i}
               data-testid={`option-${i}`}
               onClick={() => touch(i, isMulti)}
-              className={`rounded-xl border-2 px-5 py-4 text-left text-lg font-medium ${
-                selected.includes(i)
-                  ? "border-blue-600 bg-blue-50"
-                  : "border-slate-200 bg-slate-50 active:bg-blue-50"
+              className={`glass-chip flex min-h-[var(--tap-patient)] w-full items-center px-[var(--space-lg)] py-[var(--space-md)] text-left text-[19px] font-semibold ${
+                sel ? "is-selected" : "text-[var(--ink)]"
               }`}
             >
-              {isMulti && <span className="mr-2">{selected.includes(i) ? "☑" : "☐"}</span>}
+              {isMulti && (
+                <span aria-hidden className="mr-[var(--space-md)] text-xl">
+                  {sel ? "☑" : "☐"}
+                </span>
+              )}
               {o}
             </button>
-          ))}
-        </div>
-        {isMulti && (
-          <button
-            data-testid="option-confirm"
-            disabled={!selected.length}
-            onClick={async () => {
-              answered.current += 1;
-              await answer({ touch_indices: selected });
-            }}
-            className="mt-4 w-full rounded-xl bg-blue-600 py-4 text-lg font-semibold text-white disabled:opacity-40"
-          >
-            OK
-          </button>
-        )}
-        {!isMulti && (
-          <button
-            data-testid="mic-btn"
-            onClick={() => setRecording((r) => !r)}
-            className="mt-4 w-full rounded-xl border border-slate-300 py-4 text-lg font-semibold text-slate-700"
-          >
-            🎙️ {recording ? t("listening") : t("mic_tap_to_speak")}
-          </button>
-        )}
-      </section>
-    </main>
+          );
+        })}
+      </div>
+
+      {isMulti ? (
+        <button
+          data-testid="option-confirm"
+          disabled={!selected.length}
+          onClick={async () => {
+            answered.current += 1;
+            await answer({ touch_indices: selected });
+          }}
+          className="mt-[var(--space-lg)] min-h-[var(--tap-patient)] w-full rounded-[var(--radius-chip)] text-lg font-bold text-[var(--accent-ink)] transition-opacity disabled:opacity-40"
+          style={{ background: "var(--accent)", position: "sticky", bottom: "var(--space-lg)" }}
+        >
+          OK ✓
+        </button>
+      ) : (
+        <button
+          data-testid="mic-btn"
+          onClick={() => setRecording((r) => !r)}
+          className="glass-chip mt-[var(--space-lg)] flex min-h-[var(--tap-min)] w-full items-center justify-center text-lg font-bold text-[var(--ink)]"
+          style={recording ? { borderColor: "var(--accent)", color: "var(--accent)" } : undefined}
+        >
+          <span aria-hidden className="mr-[var(--space-sm)] text-xl">
+            🎙️
+          </span>
+          {recording ? t("listening") : t("mic_tap_to_speak")}
+        </button>
+      )}
+    </section>
   );
 }

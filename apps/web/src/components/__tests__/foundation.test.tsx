@@ -15,8 +15,8 @@ describe("glass tiers (plan §1.3) — stylesheet contract", () => {
   const css = read("glass.css");
 
   it("defines exactly two tiers with distinct blur values", () => {
-    expect(css).toMatch(/\.glass-panel[^}]*blur\(14px\)/s);
-    expect(css).toMatch(/\.glass-chip[^}]*blur\(8px\)/s);
+    expect(css).toMatch(/\.glass-panel[^}]*blur\(14px\)/);
+    expect(css).toMatch(/\.glass-chip[^}]*blur\(8px\)/);
   });
 
   it("panels carry elevation shadow + inset toplight (not flat glass)", () => {
@@ -25,11 +25,11 @@ describe("glass tiers (plan §1.3) — stylesheet contract", () => {
   });
 
   it("has a solid fallback for GPUs without backdrop-filter", () => {
-    expect(css).toMatch(/@supports not[^{]*backdrop-filter/s);
+    expect(css).toMatch(/@supports not[^{]*backdrop-filter/);
   });
 
   it("selected chip swaps to accent fill", () => {
-    expect(css).toMatch(/\.glass-chip\.is-selected[^}]*var\(--accent\)/s);
+    expect(css).toMatch(/\.glass-chip\.is-selected[^}]*var\(--accent\)/);
   });
 });
 
