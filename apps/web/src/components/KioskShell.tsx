@@ -34,7 +34,12 @@ export default function KioskShell({
   return (
     <div className="relative z-10 flex min-h-screen flex-col" data-testid="kiosk-shell">
       <header className="flex items-center justify-between px-[clamp(20px,5vw,56px)] pt-[var(--space-lg)]">
-        <span className="text-[15px] font-semibold tracking-[-0.01em] text-[var(--ink)]">
+        <span className="flex items-center gap-[var(--space-sm)] text-[15px] font-semibold tracking-[-0.01em] text-[var(--ink)]">
+          <span
+            aria-hidden
+            className="inline-block h-[10px] w-[10px] rounded-full"
+            style={{ background: "var(--accent)" }}
+          />
           MediKiosk
         </span>
         {wide ? (
@@ -85,7 +90,7 @@ export default function KioskShell({
 
       <main
         className={`mx-auto flex w-full flex-1 flex-col ${
-          wide ? "max-w-[1040px]" : "max-w-[720px]"
+          wide ? "max-w-[1040px]" : "max-w-3xl"
         } px-[clamp(20px,5vw,56px)] py-[var(--space-xl)]`}
       >
         {children}

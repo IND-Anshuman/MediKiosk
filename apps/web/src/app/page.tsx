@@ -56,6 +56,6 @@ export default function Home() {
         )}
         {stage === "docs" && <DocumentsView sessionId={sessionId} />}
       </div>
-    </KioskShell>
+        </KioskShell>
   );
 }

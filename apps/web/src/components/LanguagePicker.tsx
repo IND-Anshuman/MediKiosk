@@ -31,6 +31,8 @@ export default function LanguagePicker({
         {t("welcome")}
       </h1>
 
+      <p className="text-center text-[17px] font-medium text-[var(--ink-2)]">{t("language_picker_title")}</p>
+
       <div className="grid gap-[var(--space-lg)] sm:grid-cols-2">
         <button
           data-testid="lang-hi"
@@ -38,7 +40,7 @@ export default function LanguagePicker({
           className="glass-panel flex min-h-[var(--tap-patient)] flex-col items-center justify-center gap-[var(--space-xs)] px-[var(--space-xl)] py-[var(--space-2xl)] text-[var(--ink)] transition-colors hover:border-[var(--accent)]"
         >
           <span style={{ fontSize: "32px", fontWeight: 700, lineHeight: 1.15 }}>हिन्दी</span>
-          <span className="text-[15px] text-[var(--ink-2)]">Choose Hindi</span>
+          <span className="text-[17px] font-medium">Choose Hindi</span>
         </button>
 
         <button
@@ -47,7 +49,7 @@ export default function LanguagePicker({
           className="glass-panel flex min-h-[var(--tap-patient)] flex-col items-center justify-center gap-[var(--space-xs)] px-[var(--space-xl)] py-[var(--space-2xl)] text-[var(--ink)] transition-colors hover:border-[var(--accent)]"
         >
           <span style={{ fontSize: "32px", fontWeight: 700, lineHeight: 1.15 }}>English</span>
-          <span className="text-[15px] text-[var(--ink-2)]">अंग्रेज़ी में</span>
+          <span className="text-[17px] font-medium">अंग्रेज़ी में</span>
         </button>
       </div>
     </div>

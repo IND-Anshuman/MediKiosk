@@ -15,8 +15,8 @@ describe("glass tiers (plan §1.3) — stylesheet contract", () => {
   const css = read("glass.css");
 
   it("defines exactly two tiers with distinct blur values", () => {
-    expect(css).toMatch(/\.glass-panel[^}]*blur\(14px\)/);
-    expect(css).toMatch(/\.glass-chip[^}]*blur\(8px\)/);
+    expect(css).toMatch(/\.glass-panel[^}]*blur\(18px\)/);
+    expect(css).toMatch(/\.glass-chip[^}]*blur\(10px\)/);
   });
 
   it("panels carry elevation shadow + inset toplight (not flat glass)", () => {
