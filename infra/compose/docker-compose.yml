@@ -58,13 +58,6 @@ services:
       ASR_BACKEND: ${ASR_BACKEND:-local}
       SPEECHMATICS_API_KEY: ${SPEECHMATICS_API_KEY:-}
       LANG_BACKEND: ${LANG_BACKEND:-local}
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8001/healthz"]
       interval: 5s
